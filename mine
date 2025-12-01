@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Treasure Hunt For My Heart</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles and animations */
+        :root {
+            --color-yellow: #FFD700; /* Gold/Sunflower Yellow */
+            --color-chocolate: #4A2C2A; /* Rich Brown */
+            --color-icecream: #FDEBD0; /* Soft Cream/Pastel */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-icecream);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Hero text shadow for better visibility on images */
+        .hero-text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Animation for the main question */
+        @keyframes pulse-shake {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            10%, 30%, 70%, 90% { transform: rotate(1deg); }
+            20%, 40%, 60%, 80% { transform: rotate(-1deg); }
+        }
+
+        #question-text {
+            animation: pulse-shake 4s infinite ease-in-out;
+        }
+
+        /* Dynamic page container transitions */
+        .page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .hidden-page {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .active-page {
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* Button styling */
+        .proposal-btn {
+            background-color: var(--color-yellow);
+            color: var(--color-chocolate);
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+        }
+
+        .proposal-btn:hover {
+            background-color: #FFEA00;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Specific image styling for sections */
+        .themed-image {
+            width: 100%;
+            max-width: 250px;
+            height: 250px;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        /* SVG Container for the Sunflower */
+        .svg-container {
+            width: 250px;
+            height: 250px;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Page 1: The Preamble - "The Sweet Beginning" -->
+    <section id="page1" class="page-container active-page p-4 transition duration-500" data-page="1">
+        <!-- Hero Background: Sunflowers Field -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url('https://images.unsplash.com/photo-1477414348463-c0eb7f1359b6?auto=format&fit=crop&w=1920&q=80');"></div>
+        
+        <div class="relative max-w-4xl mx-auto text-center bg-white/90 p-8 md:p-12 rounded-3xl shadow-2xl z-20">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 hero-text-shadow" style="color: var(--color-chocolate);">
+                A Treasure Hunt For My Heart
+            </h1>
+            <p class="text-lg md:text-xl mb-10 text-gray-700 max-w-2xl mx-auto">
+                Hello, my love. Everything I feel for you couldn't fit onto one page, so I built you a journey. This next step is about everything you are: light, comfort, and pure joy. Click the button to start the next chapter...
+            </p>
+            
+            <button class="proposal-btn text-2xl flex items-center justify-center mx-auto" onclick="showPage(2)">
+                <!-- Cat Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 14.5c0 .28-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h7c.28 0 .5.22.5.5zM20 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-16 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 2c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-.52-.1-1.01-.27-1.47.62-.31 1.25-.53 1.94-.65 1.05-.18 2.14-.18 3.19 0 .69.12 1.32.34 1.94.65-.17.46-.27.95-.27 1.47zM12 2c-3.37 0-6.1 2.38-6.84 5.5h13.68C18.1 4.38 15.37 2 12 2z"/>
+                </svg>
+                The Story Begins
+            </button>
+        </div>
+    </section>
+
+    <!-- Page 2: The Journey - "The Ingredients of Us" -->
+    <section id="page2" class="page-container hidden-page p-8 transition duration-500" data-page="2">
+        <div class="relative max-w-6xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-black mb-12" style="color: var(--color-chocolate);">
+                The <span class="text-yellow-500">Ingredients</span> of Us
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Ingredient 1: Cat -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300">
+                    <img class="themed-image mx-auto mb-4" src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=800&auto=format&fit=crop" 
+                         alt="Cute Cat">
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-600">The Cat</h3>
+                    <p class="text-gray-600">You are my home, my comfort, my favorite place to be quiet. Our relationship is the softest blanket on the coldest day.</p>
+                </div>
+
+                <!-- Ingredient 2: Bird -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300">
+                    <img class="themed-image mx-auto mb-4" src="https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=800&q=80" 
+                         alt="Bright Bird">
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-600">The Bird</h3>
+                    <p class="text-gray-600">You give me wings to be myself. With you, every day feels like a new adventure, and my heart soars.</p>
+                </div>
+
+                <!-- Ingredient 3: Chocolate -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300">
+                    <img class="themed-image mx-auto mb-4" src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?auto=format&fit=crop&w=800&q=80" 
+                         alt="Delicious Chocolate">
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-600">The Chocolate</h3>
+                    <p class="text-gray-600">Every moment together is rich and indulgent. You are the sweet, deep flavor that makes everything worthwhile.</p>
+                </div>
+
+                <!-- Ingredient 4: Sunflower - FIXED using INLINE SVG -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300">
+                    <div class="svg-container mx-auto mb-4">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Center Seed Pod -->
+                            <circle cx="50" cy="50" r="15" fill="#4A2C2A"/>
+                            <!-- Petals (Simplified 12 petals for good coverage) -->
+                            <!-- Rotate petals around center (50, 50) -->
+                            <g fill="#FFD700" stroke="#CCAA00" stroke-width="0.5">
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(0, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(30, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(60, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(90, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(120, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(150, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(180, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(210, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(240, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(270, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(300, 50, 50)"/>
+                                <ellipse cx="50" cy="25" rx="10" ry="20" transform="rotate(330, 50, 50)"/>
+                            </g>
+                            <!-- Stem and Leaf (Simple green) -->
+                            <rect x="48" y="65" width="4" height="30" fill="#4CAF50"/>
+                            <path d="M52 80 L65 70 L52 75 Z" fill="#66BB6A"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-600">The Sunflower</h3>
+                    <p class="text-gray-600">The culmination. All of these ingredients lead to one simple truth: My future is only bright with you.</p>
+                </div>
+            </div>
+
+            <p class="text-2xl mt-12 mb-6 font-semibold" style="color: var(--color-chocolate);">
+                Are you ready to see the final recipe?
+            </p>
+            <button class="proposal-btn text-2xl flex items-center justify-center mx-auto" onclick="showPage(3)">
+                <!-- Ice Cream Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18 10h-2V7c0-2.21-1.79-4-4-4S8 4.79 8 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zm-8-3c0-1.1.9-2 2-2s2 .9 2 2v3h-4V7z"/>
+                </svg>
+                Ready for Dessert?
+            </button>
+        </div>
+    </section>
+
+    <!-- Page 3: The Promise - "The Exclusive Recipe" -->
+    <section id="page3" class="page-container hidden-page p-8 transition duration-500" data-page="3">
+        <div class="relative max-w-3xl mx-auto text-center bg-white p-8 md:p-12 rounded-3xl shadow-2xl border-4 border-yellow-500">
+            <h2 class="text-5xl md:text-7xl font-black mb-8" style="color: var(--color-chocolate);">
+                My <span class="text-yellow-600">Promise</span> to You
+            </h2>
+
+            <p class="text-xl md:text-2xl mb-10 text-gray-700 font-medium">
+                My dearest Anika, I have never been more certain of anything in my life. You are the sun in my sky, the warmth in my heart, and the one person I want to walk beside, forever. I want our lives to be entwined, exclusively and completely.
+            </p>
+
+            <ul class="text-left space-y-4 text-lg md:text-xl mb-12 list-none p-0">
+                <li class="flex items-start">
+                    <span class="text-3xl mr-3 text-yellow-500 animate-pulse">⭐</span>
+                    **I Commit** to endless laughter and comfort, making our home our sanctuary.
+                </li>
+                <li class="flex items-start">
+                    <span class="text-3xl mr-3 text-yellow-500 animate-pulse">⭐</span>
+                    **I Commit** to always being your greatest supporter, championing your dreams.
+                </li>
+                <li class="flex items-start">
+                    <span class="text-3xl mr-3 text-yellow-500 animate-pulse">⭐</span>
+                    **I Commit** to choosing you, every day, for the rest of my life.
+                </li>
+            </ul>
+
+            <p class="text-xl md:text-2xl mb-8 font-semibold" style="color: var(--color-chocolate);">
+                There is just one last page, one final step in this journey, and it's the most important one.
+            </p>
+
+            <button class="proposal-btn text-3xl flex items-center justify-center mx-auto" onclick="showPage(4)">
+                <!-- Heart Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                The Question
+            </button>
+        </div>
+    </section>
+
+    <!-- Page 4: The Question - "The Forever Scoop" -->
+    <section id="page4" class="page-container hidden-page p-4 transition duration-500" data-page="4">
+        <!-- Background: Beautiful Sunflower Close-up -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url('https://images.unsplash.com/photo-1477414348463-c0eb7f1359b6?auto=format&fit=crop&w=1920&q=80');"></div>
+        
+        <div class="relative max-w-4xl mx-auto text-center z-20 bg-white/90 p-10 md:p-20 rounded-3xl shadow-2xl">
+            <h2 class="text-5xl md:text-8xl font-black mb-12" style="color: var(--color-chocolate);">
+                The Forever Scoop
+            </h2>
+
+            <p id="question-text" class="text-7xl md:text-9xl font-extrabold mb-16 hero-text-shadow" style="color: var(--color-yellow);">
+                Anika, Will You Commit To Me?
+            </p>
+            
+            <!-- Final Image (Ice Cream) -->
+            <img class="mx-auto mb-10 themed-image w-full max-w-sm" style="height: auto;" src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=800&q=80" 
+                 alt="Two Ice Cream Cones for Us">
+
+            <!-- Response Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+                <button class="proposal-btn text-3xl" onclick="handleResponse('yes')">
+                    YES, Let's Build a Life!
+                </button>
+                <button class="bg-gray-200 text-gray-800 font-semibold py-4 px-8 rounded-full shadow-lg hover:bg-gray-300 transition duration-200 text-2xl" onclick="handleResponse('hug')">
+                    *Let me hug you first...*
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Message Box (Instead of alert()) -->
+    <div id="message-box" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-md w-11/12 border-4 border-yellow-500">
+            <h3 id="message-title" class="text-3xl font-bold mb-4" style="color: var(--color-chocolate);"></h3>
+            <p id="message-text" class="text-xl mb-6 text-gray-700"></p>
+            <button class="proposal-btn px-6 py-2" onclick="closeMessageBox()">Close</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Core Functions ---
+
+        /** Global function to handle page navigation */
+        function showPage(pageNumber) {
+            const pages = document.querySelectorAll('.page-container');
+            pages.forEach(page => {
+                const targetPage = parseInt(page.getAttribute('data-page'));
+                if (targetPage === pageNumber) {
+                    page.classList.remove('hidden-page');
+                    page.classList.add('active-page');
+                    window.scrollTo(0, 0); // Scroll to top on new page
+                } else {
+                    page.classList.add('hidden-page');
+                    page.classList.remove('active-page');
+                }
+            });
+        }
+
+        /** Custom message box function */
+        function showMessageBox(title, message) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-text').textContent = message;
+            const messageBox = document.getElementById('message-box');
+            messageBox.classList.remove('opacity-0', 'pointer-events-none');
+            messageBox.classList.add('opacity-100');
+        }
+
+        /** Function to close the custom message box */
+        function closeMessageBox() {
+            const messageBox = document.getElementById('message-box');
+            messageBox.classList.remove('opacity-100');
+            messageBox.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+
+        /** Handler for the final commitment response */
+        function handleResponse(responseType) {
+            if (responseType === 'yes') {
+                showMessageBox(
+                    "ANIKA SAID YES! 🥳", 
+                    "This is the best commitment code ever written! Congratulations! You just unlocked the most beautiful future."
+                );
+                // Optionally, disable the buttons after clicking yes
+                document.querySelector('#page4 button[onclick*="yes"]').disabled = true;
+                document.querySelector('#page4 button[onclick*="hug"]').disabled = true;
+                
+                // You might also want to change the final question text to a confirmation message
+                document.getElementById('question-text').textContent = "We're committed. Forever.";
+
+            } else if (responseType === 'hug') {
+                showMessageBox(
+                    "Close the computer!", 
+                    "You are now required to look up, give her the biggest hug, and seal the commitment with a kiss. The internet can wait!"
+                );
+            }
+        }
+
+        // --- Initialization ---
+        window.onload = function() {
+            console.log("Proposal Website Loaded. Ready for The Sweet Beginning!");
+        };
+    </script>
+
+</body>
+</html>
