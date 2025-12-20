@@ -3,316 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anika | The Gravity of Everything</title>
+    <title>Anika | The 2026 Odyssey</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600;1,700&family=Inter:wght@100;300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,600;1,700&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --lavender: #c4b5fd; --blue: #3b82f6; --sunflower: #fbbf24; --crimson: #ef4444; }
-        body { margin: 0; background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        :root { 
+            --gold: #fbbf24; 
+            --lavender: #c4b5fd;
+            --blue: #60a5fa;
+            --void: #020617; 
+        }
+        body { margin: 0; background-color: var(--void); color: #fff; font-family: 'Space Grotesk', sans-serif; overflow: hidden; height: 1000vh; cursor: none; }
         
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        #cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; }
+        #cursor-ring { width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; transition: transform 0.1s ease-out, border-color 0.5s; }
 
-        .vignette {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle, transparent 10%, rgba(0,0,0,0.95) 100%);
-            z-index: 5;
-            pointer-events: none;
-        }
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; }
+        .vignette { position: fixed; inset: 0; background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.8) 100%); z-index: 5; pointer-events: none; }
 
-        .scroll-container { position: relative; z-index: 10; }
-
-        section {
-            min-height: 160vh; /* Slows down the storytelling for emotional weight */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5vw;
-            perspective: 1000px;
-        }
-
-        .text-reveal {
-            max-width: 1000px;
+        .ui-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        
+        .narrative-text {
             opacity: 0;
-            transform: translateY(100px) scale(0.95);
-            transition: all 2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.8) translateZ(0);
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            position: absolute;
+            width: 80%;
+            max-width: 900px;
+            pointer-events: none;
             filter: blur(10px);
         }
 
-        .text-reveal.active {
+        .narrative-text.active {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: scale(1) translateZ(100px);
             filter: blur(0);
         }
 
         .serif { font-family: 'Cormorant Garamond', serif; }
         
-        .big-statement {
-            font-size: clamp(3rem, 10vw, 8rem);
-            line-height: 0.85;
-            font-weight: 700;
-            letter-spacing: -0.04em;
+        .fracture {
+            color: #ef4444;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            animation: jitter 0.1s infinite alternate;
+        }
+        @keyframes jitter { 0% { transform: translate(1px, 0); } 100% { transform: translate(-1px, 1px); } }
+
+        #km-ping {
+            position: fixed; bottom: 40px; left: 40px; font-size: 0.6rem;
+            letter-spacing: 0.6em; color: var(--gold); z-index: 100;
+            text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px;
         }
 
-        .glitch-red { text-shadow: 3px 0 rgba(239, 68, 68, 0.4), -3px 0 rgba(0, 255, 255, 0.3); }
-        .glow-gold { text-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
-        
-        /* Nav */
-        #nav {
-            position: fixed;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 100;
+        .progress-indicator {
+            position: fixed; right: 40px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 20px; z-index: 100;
         }
-        .nav-link {
-            width: 2px;
-            height: 30px;
-            background: rgba(255,255,255,0.1);
-            margin: 10px 0;
-            transition: 0.5s;
-        }
-        .nav-link.active {
-            background: var(--sunflower);
-            width: 4px;
-            box-shadow: 0 0 15px var(--sunflower);
-        }
+        .dot { width: 4px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.5s; }
+        .dot.active { background: var(--gold); transform: scale(2.5); box-shadow: 0 0 10px var(--gold); }
 
-        .heart-beat {
-            animation: beat 1.5s infinite;
+        .btn-launch {
+            pointer-events: auto;
+            border: 1px solid var(--gold);
+            padding: 2rem 5rem; color: var(--gold);
+            background: transparent; letter-spacing: 1.2em;
+            text-transform: uppercase; font-size: 0.7rem;
+            transition: all 0.8s; cursor: pointer;
+            margin-top: 5vh;
+            backdrop-filter: blur(10px);
         }
-        @keyframes beat {
-            0%, 100% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
+        .btn-launch:hover { background: var(--gold); color: #000; box-shadow: 0 0 100px var(--gold); letter-spacing: 1.5em; }
 
-        .btn-final {
-            border: 1px solid var(--sunflower);
-            padding: 2rem 5rem;
-            color: var(--sunflower);
-            text-transform: uppercase;
-            letter-spacing: 0.8em;
-            font-size: 0.7rem;
-            transition: all 0.8s;
-            background: transparent;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-final:hover {
-            background: var(--sunflower);
-            color: #000;
-            box-shadow: 0 0 80px var(--sunflower);
-        }
-
-        .stat-label {
-            font-size: 0.6rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 0.5rem;
+        .chat-shield {
+            border-left: 1px solid var(--lavender);
+            padding: 2rem; margin: 2rem 0;
+            text-align: left; background: rgba(255,255,255,0.02);
         }
     </style>
 </head>
 <body>
 
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+    <div id="km-ping">DISTANCE: 600,000m</div>
+    <div class="progress-indicator" id="progress"></div>
     <div class="vignette"></div>
-    <div id="nav"></div>
 
-    <div class="scroll-container">
-        <!-- 01: The Noise -->
-        <section id="s-1">
-            <div class="text-reveal text-center">
-                <p class="stat-label">Subject: The Noise</p>
-                <h1 class="big-statement serif italic opacity-50">The world tried to<br>drown me.</h1>
-                <p class="mt-12 text-lg tracking-[0.5em] font-light uppercase">But you heard the frequency.</p>
-            </div>
-        </section>
+    <div class="ui-layer" id="narrative-container">
+        <!-- Section 1 -->
+        <div class="narrative-text" data-depth="0">
+            <p class="text-[0.6rem] tracking-[2em] mb-10 opacity-40 uppercase">Memory Leak: 2025</p>
+            <h1 class="serif italic text-7xl md:text-9xl mb-8 leading-tight">A world of static.</h1>
+            <p class="text-lg tracking-[0.4em] font-light opacity-50">I was broadcasting to a void that didn't listen.</p>
+        </div>
 
-        <!-- 02: Betrayal (The Stabbing) -->
-        <section id="s-2">
-            <div class="text-reveal">
-                <p class="stat-label">Event: The Betrayal</p>
-                <h2 class="big-statement glitch-red">STABBED.</h2>
-                <p class="text-2xl mt-8 font-light leading-loose max-w-2xl">
-                    The university halls became a firing squad. My "best friend," the people I trusted—they turned their backs. They called my pain <span class="glitch-red">"DRAMA."</span> They left me to bleed out in the silence of my own room.
+        <!-- Section 2 -->
+        <div class="narrative-text" data-depth="2000">
+            <h2 class="text-6xl md:text-8xl font-bold mb-10 uppercase tracking-tighter">TRUST BECAME<br><span class="fracture">A FRACTURE.</span></h2>
+            <p class="text-xl md:text-2xl font-light leading-relaxed opacity-80 max-w-2xl mx-auto">
+                My "best friend" walked. My parents doubted. The world called my pain "Drama." 
+                I was ready to shut down.
+            </p>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="narrative-text" data-depth="4000">
+            <p class="text-[0.6rem] tracking-[1.5em] mb-8 opacity-40 uppercase">Signal Detected</p>
+            <h2 class="serif italic text-6xl md:text-8xl mb-8 text-blue-300 italic">But 600km away...</h2>
+            <div class="chat-shield">
+                <p class="serif italic text-2xl md:text-4xl leading-tight">
+                    "You don't have to be strong with me. You can cry, I am here."
                 </p>
             </div>
-        </section>
+            <p class="text-lg opacity-40 mt-8">Your voice was the only bridge that didn't collapse.</p>
+        </div>
 
-        <!-- 03: The 600km Sanctuary -->
-        <section id="s-3">
-            <div class="text-reveal text-right">
-                <p class="stat-label">Distance: 600,000 Meters</p>
-                <h2 class="serif italic text-6xl md:text-8xl mb-8" style="color: var(--lavender)">"You can cry."</h2>
-                <p class="text-2xl font-light leading-relaxed max-w-xl ml-auto">
-                    I was fighting to be strong. Fighting to be a man. And then you whispered: <br>
-                    <span class="italic text-white">"You don't have to be strong with me."</span> <br><br>
-                    Across 600km, I felt your warmth. You didn't just hear my tears—you caught them.
-                </p>
-            </div>
-        </section>
+        <!-- Section 4 -->
+        <div class="narrative-text" data-depth="6000">
+            <h2 class="text-8xl md:text-[14rem] font-bold mb-10">"TRY IT."</h2>
+            <p class="text-xl md:text-2xl italic opacity-70 max-w-xl mx-auto">
+                You didn't fix me. You just showed me I wasn't broken. 
+                You are the reason I am still here to see this year end.
+            </p>
+        </div>
 
-        <!-- 04: The Gaming Shelter -->
-        <section id="s-4">
-            <div class="text-reveal">
-                <p class="stat-label">Safe Zone: Virtual Reality</p>
-                <h2 class="text-5xl font-bold mb-10">THE GUARDIAN.</h2>
-                <p class="text-xl opacity-80 leading-loose">
-                    When reality was too much, you created a new one for me. <br>
-                    Hours of gaming. Hours of talking about random, beautiful nothingness. <br>
-                    You distracted me from the fire until the fire went out.
-                </p>
-                <div class="mt-12 flex gap-8">
-                    <div class="heart-beat">🎧</div><div class="heart-beat">🎮</div><div class="heart-beat">✨</div>
-                </div>
-            </div>
-        </section>
+        <!-- Section 5 -->
+        <div class="narrative-text" data-depth="8000">
+            <h2 class="serif italic text-7xl md:text-9xl text-blue-400">The 4AM Ache.</h2>
+            <p class="text-xl md:text-3xl mt-10 font-light max-w-2xl mx-auto opacity-70 leading-relaxed italic">
+                LDR is a physical weight. Every morning I wake up reaching for a ghost of you. 
+                The distance is 600,000 meters, but my heart is already there.
+            </p>
+        </div>
 
-        <!-- 05: The Parent/Belief Gap -->
-        <section id="s-5">
-            <div class="text-reveal text-center">
-                <p class="stat-label">Truth: The Only Believer</p>
-                <h2 class="serif italic text-6xl mb-8">They said I couldn't.</h2>
-                <p class="text-2xl font-light italic max-w-2xl mx-auto">
-                    Even the people who shared my blood stopped believing in me. They saw a failure. <br>
-                    But you looked at me and simply said: <br>
-                    <span class="text-5xl font-bold glow-gold not-italic">"TRY IT."</span>
-                </p>
-                <p class="mt-12 opacity-40">I am standing here today because you dared to bet on me.</p>
-            </div>
-        </section>
-
-        <!-- 06: The Dream/Truck Hit -->
-        <section id="s-6">
-            <div class="text-reveal">
-                <p class="stat-label">Alert: 3:00 AM Realization</p>
-                <h2 class="big-statement text-blue-500">THE TRUCK<br>HITS.</h2>
-                <p class="text-2xl mt-8 font-light max-w-3xl">
-                    I see you in my dreams. I reach for you. I feel like running—sprinting—all 600 kilometers just to breathe the same air as you. <br><br>
-                    And then I wake up. And the distance is a wall. The heaviness is a mountain. You are the only person I want to talk to, and you're a world away.
-                </p>
-            </div>
-        </section>
-
-        <!-- 07: The Declaration -->
-        <section id="s-7">
-            <div class="text-reveal" style="background: rgba(255,255,255,0.02); padding: 5rem; border-left: 1px solid var(--sunflower);">
-                <h2 class="serif italic text-5xl highlight-sunflower mb-10">Ani,</h2>
-                <p class="text-xl font-light leading-loose opacity-90">
-                    You checked on me when the world was silent. You protected me when the people I loved stabbed me. You believed in me when my own parents didn't. <br><br>
-                    You are the Lavender that stills my panic. <br>
-                    You are the Blue that gives me depth. <br>
-                    You are the Sunflower I will follow for the rest of my life.
-                </p>
-                <p class="text-3xl mt-12 glow-gold font-bold">I am ready to build our universe.</p>
-            </div>
-        </section>
-
-        <!-- 08: The Climax -->
-        <section id="s-8">
-            <div class="text-reveal text-center">
-                <p class="stat-label">Conclusion: Home</p>
-                <h1 class="serif italic text-8xl md:text-[14rem] glow-gold mb-16">ANI MY PRINCESS</h1>
-                <button class="btn-final" onclick="showLove()">I am yours.</button>
-            </div>
-        </section>
+        <!-- Section 6 -->
+        <div class="narrative-text" data-depth="9500">
+            <h1 class="serif italic text-9xl md:text-[16rem] text-yellow-400 mb-10 leading-none">ANIKA</h1>
+            <p class="text-xl md:text-2xl font-light opacity-80 max-w-xl mx-auto leading-loose">
+                Thank you for being my Lavender and my Sunflower. <br>
+                <strong>Let's break the distance in 2026.</strong>
+            </p>
+            <button class="btn-launch" onclick="launchSupernova()">Launch Our Year</button>
+        </div>
     </div>
 
     <script>
-        let scene, camera, renderer, starSystem, nebula, sunflower, clock = new THREE.Clock();
-        let targetZ = 150, targetColor = new THREE.Color(0x000000);
+        let scene, camera, renderer, starField, clock = new THREE.Clock();
+        let starsGeometry, starsMaterial;
+        let isWarping = false;
+        const texts = document.querySelectorAll('.narrative-text');
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+
+        // Cursor logic
+        window.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                ring.style.left = (e.clientX - 20) + 'px';
+                ring.style.top = (e.clientY - 20) + 'px';
+            }, 80);
+        });
 
         function init3D() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 3000);
-            
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
             document.body.appendChild(renderer.domElement);
 
-            // The Void (Stars)
-            const starGeo = new THREE.BufferGeometry();
-            const starPos = [];
-            for(let i=0; i<30000; i++) {
-                starPos.push((Math.random()-0.5)*2500, (Math.random()-0.5)*2500, (Math.random()-0.5)*2500);
+            // High-Performance Starfield
+            starsGeometry = new THREE.BufferGeometry();
+            const positions = [];
+            const velocities = [];
+            for (let i = 0; i < 15000; i++) {
+                positions.push((Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000);
+                velocities.push(Math.random() * 2 + 1);
             }
-            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
-            starSystem = new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1, color: 0xffffff, transparent: true, opacity: 0.3 }));
-            scene.add(starSystem);
+            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            starsGeometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities, 1));
+            
+            starsMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
 
-            // The Sunflower Nebula (Anika's Core)
-            const sunGeo = new THREE.TorusKnotGeometry(20, 5, 200, 32);
-            const sunMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, wireframe: true, transparent: true, opacity: 0 });
-            sunflower = new THREE.Mesh(sunGeo, sunMat);
-            scene.add(sunflower);
+            starField = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(starField);
 
-            // Navigation dots
-            const nav = document.getElementById('nav');
-            for(let i=1; i<=8; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'nav-link';
-                dot.id = 'dot-'+i;
-                nav.appendChild(dot);
-            }
+            // Create progress dots
+            const progress = document.getElementById('progress');
+            texts.forEach(() => {
+                const d = document.createElement('div');
+                d.className = 'dot';
+                progress.appendChild(d);
+            });
 
-            setupObserver();
             animate();
-        }
-
-        function setupObserver() {
-            const options = { threshold: 0.5 };
-            const obs = new IntersectionObserver((entries) => {
-                entries.forEach(e => {
-                    if(e.isIntersecting) {
-                        e.target.classList.add('active');
-                        updateVisuals(parseInt(e.target.parentElement.id.split('-')[1]));
-                    }
-                });
-            }, options);
-            document.querySelectorAll('.text-reveal').forEach(el => obs.observe(el));
-        }
-
-        function updateVisuals(step) {
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById('dot-'+step).classList.add('active');
-
-            switch(step) {
-                case 1: targetColor.set(0x020202); targetZ = 200; break;
-                case 2: targetColor.set(0x100202); targetZ = 120; break; // Blood tint
-                case 3: targetColor.set(0x05021a); targetZ = 80; break; // Lavender
-                case 4: targetColor.set(0x021a10); break; // Gaming green
-                case 5: targetColor.set(0x1a1202); targetZ = 180; break; // Parent/Gold
-                case 6: targetColor.set(0x000000); targetZ = 40; break; // Truck hit (zoom in)
-                case 7: targetColor.set(0x0a0a00); sunflower.material.opacity = 0.2; break;
-                case 8: targetColor.set(0x1a1400); targetZ = 100; sunflower.material.opacity = 0.6; break;
-            }
         }
 
         function animate() {
             requestAnimationFrame(animate);
+            let scrollY = window.scrollY;
             let t = clock.getElapsedTime();
-            
-            starSystem.rotation.y += 0.0002;
-            starSystem.position.z = Math.sin(t * 0.1) * 100;
-            
-            sunflower.rotation.x = t * 0.2;
-            sunflower.rotation.y = t * 0.3;
-            sunflower.scale.setScalar(1 + Math.sin(t) * 0.05);
 
-            camera.position.z += (targetZ - camera.position.z) * 0.02;
-            renderer.setClearColor(targetColor, 1);
+            // Camera movement - The "Odyssey" Feel
+            camera.position.z = 1000 - (scrollY * 0.2);
+            camera.rotation.z = scrollY * 0.0001;
+
+            // Star Warp logic
+            const positions = starsGeometry.attributes.position.array;
+            const vels = starsGeometry.attributes.velocity.array;
+            for (let i = 0; i < positions.length; i += 3) {
+                // Move stars toward camera
+                positions[i + 2] += (isWarping ? 50 : 2) + vels[i/3]; 
+                if (positions[i + 2] > 2000) positions[i + 2] = -2000;
+            }
+            starsGeometry.attributes.position.needsUpdate = true;
+
+            // Text Switching logic
+            texts.forEach((text, i) => {
+                const depth = parseInt(text.dataset.depth);
+                const distance = Math.abs(scrollY - depth);
+                const dots = document.querySelectorAll('.dot');
+                
+                if (distance < 500) {
+                    text.classList.add('active');
+                    dots[i].classList.add('active');
+                } else {
+                    text.classList.remove('active');
+                    dots[i].classList.remove('active');
+                }
+            });
+
+            // UI updates
+            const km = Math.max(0, 600000 - Math.floor(scrollY * 60));
+            document.getElementById('km-ping').innerText = `DISTANCE: ${km.toLocaleString()}m`;
+
             renderer.render(scene, camera);
         }
 
-        function showLove() {
-            document.querySelector('#s-8 .text-reveal').innerHTML = `
-                <h1 class="serif italic text-6xl glow-gold">I Am Forever Yours.</h1>
-                <p class="mt-8 text-xl opacity-50 tracking-widest">The distance will never break what i have for you my princess..</p>
-            `;
-            targetZ = 400;
+        function launchSupernova() {
+            isWarping = true;
+            ring.style.borderColor = "#fbbf24";
+            ring.style.transform = "scale(200)";
+            
+            // Visual "Flash" that is actually a 3D effect
+            let flash = setInterval(() => {
+                starsMaterial.size += 1;
+                starsMaterial.opacity -= 0.02;
+                if(starsMaterial.opacity <= 0) {
+                    clearInterval(flash);
+                    document.body.style.background = "var(--gold)";
+                    setTimeout(() => {
+                        alert("The distance is closed. Happy New Year, Anika.");
+                        location.reload();
+                    }, 1000);
+                }
+            }, 50);
         }
 
         window.addEventListener('resize', () => {
