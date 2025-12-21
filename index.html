@@ -12,7 +12,7 @@
     font-family: 'Quicksand', sans-serif;
     background: #0b0b0b;
     color: #fff8dc;
-    overflow-x: hidden;
+    overflow: hidden; /* Prevents scrollbars during transitions */
   }
   .container {
     width: 100%;
@@ -25,43 +25,44 @@
     padding: 2rem;
     position: relative;
   }
-  h1, h2, p {
+  
+  /* Shared fade style for everything */
+  h1, h2, p, .choice-container {
     opacity: 0;
     transform: translateY(20px);
-    transition: all 1s ease;
+    transition: opacity 1.5s ease, transform 1.5s ease;
   }
-  h1.visible, h2.visible, p.visible { 
-    opacity: 1;
-    transform: translateY(0);
+  
+  .visible { 
+    opacity: 1 !important; 
+    transform: translateY(0) !important;
   }
+
   .yellow-glow {
     color: #fbe07c;
-    text-shadow: 0 0 20px #fbe07c, 0 0 40px #fbe07c;
+    text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
   }
-  .sunflower {
-    width: 100px;
+
+  /* Fixed Floating Icons */
+  .sunflower, .cat, .bird {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    opacity: 0.8;
-  }
-  .cat, .bird {
-    position: absolute;
-    opacity: 0.5;
-    width: 80px;
+    font-size: 50px;
+    opacity: 0.4;
     transition: all 2s ease;
+    user-select: none;
   }
-  .cat { bottom: 10%; left: 5%; }
-  .bird { top: 10%; right: 10%; }
+  .sunflower { bottom: 30px; right: 30px; font-size: 70px; }
+  .cat { bottom: 12%; left: 8%; }
+  .bird { top: 12%; right: 12%; }
 
   .choice-container {
     margin-top: 2rem;
     display: flex;
     gap: 2rem;
-    opacity: 0;
-    transition: opacity 1s ease;
+    pointer-events: none; /* Off until visible */
   }
-  .choice-container.visible { opacity: 1; }
+  .choice-container.visible { pointer-events: auto; }
+
   .choice-btn {
     background: #fbe07c;
     border: none;
@@ -70,33 +71,38 @@
     border-radius: 12px;
     cursor: pointer;
     color: #000;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   .choice-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #fbe07c;
   }
 
   .memory-echo {
     font-style: italic;
-    margin-top: 2rem;
+    font-size: 1.2rem;
+    max-width: 600px;
+    line-height: 1.6;
+    position: absolute; /* Keeps it centered without moving other elements */
   }
-
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1 id="line1">Late night...</h1>
-  <p id="line2">Soft lights, quiet room, just you.</p>
-  <h2 id="line3" class="yellow-glow">I’m here.</h2>
+  <div id="intro-wrap">
+    <h1 id="line1">Late night...</h1>
+    <p id="line2" style="margin: 10px 0;">Soft lights, quiet room, just you.</p>
+    <h2 id="line3" class="yellow-glow">I’m here.</h2>
+  </div>
 
-  <img src="https://i.imgur.com/6a6Fhzo.png" class="sunflower" alt="Sunflower">
-  <img src="https://i.imgur.com/OzjN5Ch.png" class="cat" alt="Cat">
-  <img src="https://i.imgur.com/3jOtGZ0.png" class="bird" alt="Bird">
+  <div class="sunflower">🌻</div>
+  <div class="cat">🐱</div>
+  <div class="bird">🐦</div>
 
   <div class="choice-container" id="choices">
-    <button class="choice-btn" data-choice="A">Take a step closer</button>
-    <button class="choice-btn" data-choice="B">Stay and observe</button>
+    <button class="choice-btn">Take a step closer</button>
+    <button class="choice-btn">Stay and observe</button>
   </div>
 
   <p class="memory-echo" id="memory"></p>
@@ -110,39 +116,48 @@
   const memory = document.getElementById('memory');
   const cat = document.querySelector('.cat');
   const bird = document.querySelector('.bird');
+  const intro = document.getElementById('intro-wrap');
 
-  // Timeline
-  setTimeout(()=> line1.classList.add('visible'), 500);
-  setTimeout(()=> line2.classList.add('visible'), 2500);
-  setTimeout(()=> line3.classList.add('visible'), 4500);
+  // Initial Timeline
+  setTimeout(()=> line1.classList.add('visible'), 800);
+  setTimeout(()=> line2.classList.add('visible'), 2800);
+  setTimeout(()=> line3.classList.add('visible'), 4800);
+  setTimeout(() => choices.classList.add('visible'), 6800);
 
-  // subtle motion for cat and bird
+  // Floating logic
   setInterval(() => {
-    const x = Math.random() * 20 - 10;
-    const y = Math.random() * 20 - 10;
+    const x = Math.random() * 30 - 15;
+    const y = Math.random() * 30 - 15;
     cat.style.transform = `translate(${x}px, ${y}px)`;
-    bird.style.transform = `translate(${x}px, ${y}px)`;
+    bird.style.transform = `translate(${x * -1}px, ${y * -1}px)`;
   }, 3000);
 
-  // choice moment
-  setTimeout(() => choices.classList.add('visible'), 6500);
-
+  // Handle Button Click & Transition
   document.querySelectorAll('.choice-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      choices.style.display = 'none';
-      // Memory echo triggers
-      setTimeout(() => {
-        memory.textContent = "Someone once told me something I didn’t know how to carry.";
-      }, 800);
-      setTimeout(() => {
-        memory.textContent = "They said I had already given them something no one else had.";
-      }, 2500);
-      setTimeout(() => {
-        memory.textContent = "I’ve been holding that carefully ever since.";
-      }, 4500);
-    });
-  });
-</script>
+    btn.addEventListener('click', () => {
+      // 1. Fade out the current UI
+      intro.style.opacity = '0';
+      choices.style.opacity = '0';
+      choices.style.pointerEvents = 'none';
 
-</body>
-</html>
+      // 2. Start the memory sequence after the fade
+      setTimeout(() => {
+        intro.style.display = 'none';
+        choices.style.display = 'none';
+        
+        const sequence = [
+          "Someone once told me something I didn’t know how to carry.",
+          "They said I had already given them something no one else had.",
+          "I’ve been holding that carefully ever since."
+        ];
+
+        let i = 0;
+        function showLines() {
+          if (i < sequence.length) {
+            memory.classList.remove('visible'); // Fade out current
+            
+            setTimeout(() => {
+              memory.textContent = sequence[i];
+              memory.classList.add('visible'); // Fade in new
+              i++;
+              setTimeout
