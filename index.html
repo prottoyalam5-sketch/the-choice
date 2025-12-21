@@ -3,157 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 | For You</title>
+    <title>2025 | Sanctuary</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500&family=Playfair+Display:ital@1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&family=Playfair+Display:ital,wght@1,500&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #08080a; 
-            color: #fff8dc; 
-            font-family: 'Quicksand', sans-serif; 
-            overflow: hidden; 
-            height: 100vh;
-        }
+        body { background: #050508; color: #fff8dc; font-family: 'Quicksand', sans-serif; overflow: hidden; height: 100vh; cursor: crosshair; }
 
-        /* Ambient Glow Background */
-        .ambient {
-            position: fixed;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a150a 0%, #08080a 100%);
-            z-index: 1;
-        }
+        #canvas { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.8; }
 
-        .container {
-            position: relative;
-            z-index: 10;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+        .content-layer { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; pointer-events: none; }
 
-        .scene {
-            position: absolute;
-            width: 80%;
-            max-width: 600px;
-            opacity: 0;
-            transition: all 2.5s ease;
-            transform: scale(0.98);
-            pointer-events: none;
+        .thought {
+            position: absolute; width: 85%; max-width: 650px; text-align: center;
+            opacity: 0; transform: scale(0.95); transition: all 3s ease;
         }
+        .thought.active { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-        .scene.active {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #fbe07c; font-style: italic; margin-bottom: 20px; text-shadow: 0 0 20px rgba(251, 224, 124, 0.3); }
+        p { font-size: 1.1rem; line-height: 2; letter-spacing: 2px; opacity: 0.7; }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            color: #fbe07c;
-            margin-bottom: 20px;
-            font-style: italic;
-            text-shadow: 0 0 20px rgba(251, 224, 124, 0.3);
+        .heart-button {
+            margin-top: 40px; background: none; border: 1px solid rgba(251, 224, 124, 0.2);
+            color: #fbe07c; padding: 15px 35px; cursor: pointer; pointer-events: auto;
+            letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; transition: 0.6s;
         }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            letter-spacing: 1px;
-            opacity: 0.8;
-        }
-
-        /* Floating Elements */
-        .floaty {
-            position: absolute;
-            font-size: 1.5rem;
-            opacity: 0.3;
-            z-index: 2;
-            transition: transform 0.5s ease;
-        }
-
-        .next-btn {
-            margin-top: 40px;
-            background: transparent;
-            border: 1px solid rgba(251, 224, 124, 0.3);
-            color: #fbe07c;
-            padding: 12px 30px;
-            cursor: pointer;
-            letter-spacing: 3px;
-            transition: 0.5s;
-        }
-
-        .next-btn:hover {
-            border-color: #fbe07c;
-            background: rgba(251, 224, 124, 0.05);
-        }
+        .heart-button:hover { border-color: #fbe07c; background: rgba(251, 224, 124, 0.05); box-shadow: 0 0 20px rgba(251, 224, 124, 0.1); }
     </style>
 </head>
 <body>
 
-<div class="ambient"></div>
+<canvas id="canvas"></canvas>
 
-<div class="container">
-    <div id="s1" class="scene active">
-        <h1>I noticed something...</h1>
-        <p>In a world where everyone tries so hard to be "strong," you’re the only one who realized that being kind is much harder. And you do it so naturally.</p>
-        <button class="next-btn" onclick="go(2)">What I see</button>
+<div class="content-layer">
+    <div id="t1" class="thought active">
+        <h1>You asked what you could give me.</h1>
+        <p>But the truth is, I don't need a thing. Because every time the world gets too loud, you are the only place that feels quiet.</p>
+        <button class="heart-button" onclick="next(2)">Step Into 2025</button>
     </div>
 
-    <div id="s2" class="scene">
-        <h1>It’s in the small things.</h1>
-        <p>The way you laugh at my stupid jokes. The way you send me cat videos just because you know they'll make me smile. You don't realize that while you're just being "you," you're making my whole world light up.</p>
-        <button class="next-btn" onclick="go(3)">Keep going</button>
+    <div id="t2" class="thought">
+        <h1>I noticed the magic in you.</h1>
+        <p>It’s not just the sunflowers or the way you love cats. It’s that when I was a "burden" to everyone else, you saw a home. You chose to stay when everyone else walked away.</p>
+        <button class="heart-button" onclick="next(3)">The Distance</button>
     </div>
 
-    <div id="s3" class="scene">
-        <h1>600 kilometers is just a number.</h1>
-        <p>I don't need to hold your hand to feel you here. I feel it in the way you listen, the way you believe in me when I don't, and the way you made me face my fears just by standing beside me.</p>
-        <button class="next-btn" onclick="go(4)">To 2025</button>
+    <div id="t3" class="thought">
+        <h1>600km is just a number.</h1>
+        <p>Even when I'm alone, I’m not. I feel you in the jokes that make the stress disappear, and in the way you held my hand through the screen when I was breaking.</p>
+        <button class="heart-button" onclick="next(4)">My Promise</button>
     </div>
 
-    <div id="s4" class="scene">
-        <p style="letter-spacing: 10px; opacity: 0.5; margin-bottom: 20px;">OUR NEW YEAR</p>
-        <h1 style="font-size: 2.8rem;">You are my favorite place to be.</h1>
-        <p>Sunflowers, birds, ice cream, and you. <br> Thank you for letting me be myself. In 2025, I promise to be the anchor for you that you've always been for me.</p>
-        <p style="margin-top: 30px; font-size: 0.9rem; font-style: italic;">Happy New Year. I'm right here.</p>
+    <div id="t4" class="thought">
+        <p style="letter-spacing: 15px; margin-bottom: 30px; opacity: 0.4;">2025</p>
+        <h1 style="font-size: 3.2rem;">I am your home.</h1>
+        <p>For the ice cream dates we haven't had yet, for the sunflowers I'll bring you, and for the life you saved just by being you.</p>
+        <button class="heart-button" style="background: #fbe07c; color: #000; font-weight: 600;" onclick="final()">Thank You For Staying</button>
     </div>
 </div>
 
 <script>
-    // Animation for drifting icons
-    const icons = ['🌻', '🐱', '🐦', '🍦', '🍫', '✨'];
-    for(let i=0; i<20; i++) {
-        let div = document.createElement('div');
-        div.className = 'floaty';
-        div.textContent = icons[Math.floor(Math.random()*icons.length)];
-        div.style.left = Math.random() * 100 + 'vw';
-        div.style.top = Math.random() * 100 + 'vh';
-        document.body.appendChild(div);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function init() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        particles = [];
+        for(let i=0; i<120; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5
+            });
+        }
+    }
+
+    function draw() {
+        ctx.fillStyle = '#050508';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fbe07c';
         
-        animateFloaty(div);
-    }
-
-    function animateFloaty(el) {
-        let x = (Math.random() - 0.5) * 100;
-        let y = (Math.random() - 0.5) * 100;
-        el.animate([
-            { transform: 'translate(0, 0)' },
-            { transform: `translate(${x}px, ${y}px)` }
-        ], {
-            duration: 4000 + Math.random() * 4000,
-            iterations: Infinity,
-            direction: 'alternate',
-            easing: 'ease-in-out'
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            p.x += p.vx;
+            p.y += p.vy;
+            if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
         });
+        requestAnimationFrame(draw);
     }
 
-    function go(n) {
-        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-        document.getElementById('s' + n).classList.add('active');
+    init(); draw();
+
+    function next(num) {
+        document.querySelectorAll('.thought').forEach(t => t.classList.remove('active'));
+        setTimeout(() => {
+            document.getElementById('t' + num).classList.add('active');
+        }, 500);
+    }
+
+    function final() {
+        // Creates a "Bloom" effect
+        particles.forEach(p => { p.vx *= 15; p.vy *= 15; });
+        document.querySelector('#t4 h1').textContent = "I Love You.";
+        document.querySelector('.heart-button').style.display = 'none';
     }
 </script>
 </body>
