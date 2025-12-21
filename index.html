@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Quiet Place</title>
+<title>For You | 2025</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;600&display=swap');
 
   * {margin:0; padding:0; box-sizing:border-box;}
+  
   body {
     font-family: 'Quicksand', sans-serif;
-    background: #0b0b0b;
+    background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
     color: #fff8dc;
     overflow: hidden;
     height: 100vh;
@@ -19,39 +20,38 @@
     align-items: center;
   }
 
+  /* Twinkling Stars Background */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
   .container {
-    width: 100%;
+    width: 90%;
     max-width: 800px;
     text-align: center;
     position: relative;
+    z-index: 10;
   }
   
-  /* All text starts hidden */
   .fade-text {
     opacity: 0;
-    transition: opacity 1.5s ease, transform 1.5s ease;
-    transform: translateY(10px);
+    transition: all 2s ease;
     position: absolute;
     width: 100%;
-    left: 0;
-    top: 50%;
+    left: 0; top: 50%;
     transform: translateY(-50%);
+    pointer-events: none;
   }
 
-  .visible { opacity: 1 !important; transform: translateY(-50%) !important; }
+  .visible { opacity: 1 !important; transform: translateY(-50%) scale(1.05) !important; }
 
   .yellow-glow {
     color: #fbe07c;
-    text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
-  }
-
-  /* Floating Icons */
-  .icon {
-    position: absolute;
-    font-size: 50px;
-    opacity: 0.5;
-    transition: all 5s ease-in-out;
-    z-index: -1;
+    text-shadow: 0 0 15px rgba(251, 224, 124, 0.6), 0 0 30px rgba(251, 224, 124, 0.2);
   }
 
   .choice-container {
@@ -59,51 +59,69 @@
     display: flex;
     gap: 20px;
     justify-content: center;
-    margin-top: 100px;
-    transition: opacity 1s;
+    margin-top: 120px;
+    transition: opacity 1.5s;
   }
 
   .choice-btn {
-    background: #fbe07c;
-    border: none;
-    padding: 12px 24px;
-    font-weight: 600;
-    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #fbe07c;
+    padding: 12px 28px;
+    color: #fbe07c;
+    font-weight: 500;
+    border-radius: 30px;
     cursor: pointer;
+    transition: 0.3s;
+  }
+  .choice-btn:hover { background: rgba(251, 224, 124, 0.1); transform: translateY(-3px); }
+
+  #final-stage { display: none; opacity: 0; transition: opacity 3s ease; }
+  
+  .finale-btn {
+    margin-top: 30px;
+    background: #fbe07c;
+    color: #000;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(251, 224, 124, 0.4);
   }
 
-  /* Final Reveal Styling */
-  #final-msg {
-    opacity: 0;
-    transition: opacity 3s ease;
-    display: none;
+  /* Firework Particles */
+  .particle {
+    position: absolute;
+    background: #fbe07c;
+    border-radius: 50%;
+    pointer-events: none;
   }
 </style>
 </head>
 <body>
 
+<div class="stars"></div>
+
 <div class="container">
   <div id="intro">
-    <h1 id="t1" class="fade-text">Late night...</h1>
-    <p id="t2" class="fade-text">Soft lights, quiet room, just you.</p>
-    <h2 id="t3" class="fade-text yellow-glow" style="font-size: 2.5rem;">I’m here.</h2>
+    <h2 id="t1" class="fade-text">The world is loud...</h2>
+    <h2 id="t2" class="fade-text">But here, it's just quiet.</h2>
+    <h1 id="t3" class="fade-text yellow-glow" style="font-size: 3rem;">I'm right here with you.</h1>
   </div>
-
-  <div class="icon" id="sun" style="bottom: -100px; right: 20px; font-size: 70px;">🌻</div>
-  <div class="icon" id="cat" style="bottom: 50px; left: 20px;">🐱</div>
-  <div class="icon" id="bird" style="top: 50px; right: 20px;">🐦</div>
 
   <div id="choices" class="choice-container">
-    <button class="choice-btn" onclick="startStory()">Take a step closer</button>
-    <button class="choice-btn" onclick="startStory()">Stay and observe</button>
+    <button class="choice-btn" onclick="runPersonalStory()">Step into the light</button>
   </div>
 
-  <p id="mem" class="fade-text yellow-glow" style="font-style: italic; font-size: 1.5rem;"></p>
+  <p id="mem" class="fade-text yellow-glow" style="font-style: italic; font-size: 1.4rem; line-height: 1.6;"></p>
 
-  <div id="final-msg">
-    <p style="letter-spacing: 10px; opacity: 0.5; margin-bottom: 20px;">2 0 2 5</p>
-    <h2 class="yellow-glow" style="font-size: 2.2rem;">If the world ever gets too loud...</h2>
-    <p style="margin-top: 20px; font-size: 1.2rem;">You will always have a home in me.</p>
+  <div id="final-stage">
+    <p style="letter-spacing: 12px; opacity: 0.6; margin-bottom: 20px;">2 0 2 5</p>
+    <h2 class="yellow-glow" style="font-size: 2.2rem;">You are my anchor, and I am yours.</h2>
+    <p style="margin-top: 20px; font-size: 1.2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+      No matter how high the waves get this year, you will always have a safe home in me.
+    </p>
+    <button class="finale-btn" onclick="triggerFireworks()">Happy New Year</button>
   </div>
 </div>
 
@@ -113,26 +131,26 @@
   const t3 = document.getElementById('t3');
   const choices = document.getElementById('choices');
   const mem = document.getElementById('mem');
-  const final = document.getElementById('final-msg');
-  const icons = [document.getElementById('sun'), document.getElementById('cat'), document.getElementById('bird')];
+  const final = document.getElementById('final-stage');
 
-  // Animation Start
-  setTimeout(() => t1.classList.add('visible'), 500);
-  setTimeout(() => { t1.classList.remove('visible'); t2.classList.add('visible'); }, 2500);
-  setTimeout(() => { t2.classList.remove('visible'); t3.classList.add('visible'); }, 4500);
-  setTimeout(() => { choices.style.opacity = '1'; }, 6000);
+  // Intro Sequence
+  setTimeout(() => t1.classList.add('visible'), 1000);
+  setTimeout(() => { t1.classList.remove('visible'); t2.classList.add('visible'); }, 4000);
+  setTimeout(() => { t2.classList.remove('visible'); t3.classList.add('visible'); }, 7000);
+  setTimeout(() => { choices.style.opacity = '1'; choices.style.pointerEvents = 'auto'; }, 9000);
 
-  function startStory() {
-    // 1. Clear Intro
+  function runPersonalStory() {
     t3.classList.remove('visible');
     choices.style.opacity = '0';
     choices.style.pointerEvents = 'none';
 
-    // 2. Memory Timeline
+    // Longer, deeper sequence based on your info
     const lines = [
-      "Someone once told me something I didn’t know how to carry.",
-      "They said I had already given them something no one else had.",
-      "I’ve been holding that carefully ever since."
+      "I remember what you told me once.",
+      "That I gave you something no one else could.",
+      "I want you to know I've kept that promise in my heart.",
+      "When the storm feels too heavy...",
+      "I will be the light that shows you the way back."
     ];
 
     let delay = 1000;
@@ -142,30 +160,50 @@
         mem.classList.add('visible');
       }, delay);
 
-      delay += 4000;
+      delay += 4500;
 
       setTimeout(() => {
         mem.classList.remove('visible');
-      }, delay - 500);
+      }, delay - 800);
     });
 
-    // 3. Final Reveal (The part that was getting stuck)
+    // Final Reveal
     setTimeout(() => {
-      // Make icons fly away
-      icons.forEach(icon => {
-        icon.style.transform = 'translateY(-1000px) rotate(360deg)';
-        icon.style.opacity = '0';
-      });
-
-      // Show the final message
       mem.style.display = 'none';
       final.style.display = 'block';
-      setTimeout(() => {
-        final.style.opacity = '1';
-      }, 100);
-    }, delay + 1000);
+      setTimeout(() => { final.style.opacity = '1'; }, 100);
+    }, delay + 500);
+  }
+
+  function triggerFireworks() {
+    for (let i = 0; i < 100; i++) {
+      createParticle(window.innerWidth / 2, window.innerHeight / 2);
+    }
+    document.querySelector('.finale-btn').textContent = "I Love You";
+  }
+
+  function createParticle(x, y) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    document.body.appendChild(p);
+    
+    const size = Math.random() * 5 + 2;
+    p.style.width = `${size}px`;
+    p.style.height = `${size}px`;
+    
+    const destinationX = x + (Math.random() - 0.5) * 600;
+    const destinationY = y + (Math.random() - 0.5) * 600;
+    
+    const animation = p.animate([
+      { transform: `translate(${x}px, ${y}px)`, opacity: 1 },
+      { transform: `translate(${destinationX}px, ${destinationY}px)`, opacity: 0 }
+    ], {
+      duration: 1000 + Math.random() * 2000,
+      easing: 'cubic-bezier(0, .9, .57, 1)'
+    });
+    
+    animation.onfinish = () => p.remove();
   }
 </script>
-
 </body>
 </html>
