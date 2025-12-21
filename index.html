@@ -12,7 +12,7 @@
     font-family: 'Quicksand', sans-serif;
     background: #0b0b0b;
     color: #fff8dc;
-    overflow: hidden; /* Prevents scrollbars during transitions */
+    overflow: hidden;
   }
   .container {
     width: 100%;
@@ -24,9 +24,15 @@
     text-align: center;
     padding: 2rem;
     position: relative;
+    z-index: 5;
   }
   
-  /* Shared fade style for everything */
+  /* Initial content wrap */
+  #intro-wrap {
+    transition: opacity 1.5s ease;
+    z-index: 10;
+  }
+
   h1, h2, p, .choice-container {
     opacity: 0;
     transform: translateY(20px);
@@ -43,13 +49,14 @@
     text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
   }
 
-  /* Fixed Floating Icons */
+  /* Icons style */
   .sunflower, .cat, .bird {
     position: absolute;
     font-size: 50px;
-    opacity: 0.4;
-    transition: all 2s ease;
+    opacity: 0.5;
+    transition: transform 3s ease-in-out;
     user-select: none;
+    z-index: 1;
   }
   .sunflower { bottom: 30px; right: 30px; font-size: 70px; }
   .cat { bottom: 12%; left: 8%; }
@@ -59,7 +66,7 @@
     margin-top: 2rem;
     display: flex;
     gap: 2rem;
-    pointer-events: none; /* Off until visible */
+    pointer-events: none;
   }
   .choice-container.visible { pointer-events: auto; }
 
@@ -71,19 +78,21 @@
     border-radius: 12px;
     cursor: pointer;
     color: #000;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
   }
-  .choice-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #fbe07c;
-  }
+  .choice-btn:hover { transform: scale(1.05); }
 
+  /* FIX: Memory Echo styling to ensure visibility */
   .memory-echo {
     font-style: italic;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     max-width: 600px;
-    line-height: 1.6;
-    position: absolute; /* Keeps it centered without moving other elements */
+    line-height: 1.8;
+    color: #fbe07c; /* Warm yellow to ensure it pops off the black */
+    position: absolute;
+    opacity: 0;
+    transition: opacity 2s ease;
+    z-index: 20;
   }
 </style>
 </head>
@@ -114,33 +123,30 @@
   const line3 = document.getElementById('line3');
   const choices = document.getElementById('choices');
   const memory = document.getElementById('memory');
+  const intro = document.getElementById('intro-wrap');
   const cat = document.querySelector('.cat');
   const bird = document.querySelector('.bird');
-  const intro = document.getElementById('intro-wrap');
 
-  // Initial Timeline
+  // Timeline
   setTimeout(()=> line1.classList.add('visible'), 800);
   setTimeout(()=> line2.classList.add('visible'), 2800);
   setTimeout(()=> line3.classList.add('visible'), 4800);
   setTimeout(() => choices.classList.add('visible'), 6800);
 
-  // Floating logic
+  // Motion
   setInterval(() => {
-    const x = Math.random() * 30 - 15;
-    const y = Math.random() * 30 - 15;
-    cat.style.transform = `translate(${x}px, ${y}px)`;
-    bird.style.transform = `translate(${x * -1}px, ${y * -1}px)`;
+    cat.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
+    bird.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
   }, 3000);
 
-  // Handle Button Click & Transition
+  // The Fix: Click handler that clears the screen and brings in memories
   document.querySelectorAll('.choice-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      // 1. Fade out the current UI
+      // Clear the current view
       intro.style.opacity = '0';
       choices.style.opacity = '0';
       choices.style.pointerEvents = 'none';
 
-      // 2. Start the memory sequence after the fade
       setTimeout(() => {
         intro.style.display = 'none';
         choices.style.display = 'none';
@@ -154,10 +160,19 @@
         let i = 0;
         function showLines() {
           if (i < sequence.length) {
-            memory.classList.remove('visible'); // Fade out current
-            
+            memory.style.opacity = '0'; // Fade out
             setTimeout(() => {
               memory.textContent = sequence[i];
-              memory.classList.add('visible'); // Fade in new
+              memory.style.opacity = '1'; // Fade in
               i++;
-              setTimeout
+              setTimeout(showLines, 4500); // Time each line stays
+            }, 1000);
+          }
+        }
+        showLines();
+      }, 1500);
+    });
+  });
+</script>
+</body>
+</html>
