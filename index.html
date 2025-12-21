@@ -49,7 +49,7 @@
     position: absolute;
     font-size: 50px;
     opacity: 0.5;
-    transition: transform 3s ease-in-out;
+    transition: all 4s ease-in-out;
     user-select: none;
     z-index: 1;
   }
@@ -91,109 +91,10 @@
   /* The Ending Style */
   #final-reveal {
     opacity: 0;
-    transition: all 3s ease;
+    transition: all 4s ease;
     z-index: 30;
     position: absolute;
-    display: none; /* Hidden until the end */
+    display: none; 
+    transform: scale(0.9);
   }
-  .year-text { font-size: 0.9rem; letter-spacing: 5px; opacity: 0.5; margin-bottom: 20px; }
-</style>
-</head>
-<body>
-
-<div class="container">
-  <div id="intro-wrap">
-    <h1 id="line1">Late night...</h1>
-    <p id="line2" style="margin: 10px 0;">Soft lights, quiet room, just you.</p>
-    <h2 id="line3" class="yellow-glow">I’m here.</h2>
-  </div>
-
-  <div class="sunflower">🌻</div>
-  <div class="cat">🐱</div>
-  <div class="bird">🐦</div>
-
-  <div class="choice-container" id="choices">
-    <button class="choice-btn">Take a step closer</button>
-    <button class="choice-btn">Stay and observe</button>
-  </div>
-
-  <p class="memory-echo" id="memory"></p>
-
-  <div id="final-reveal">
-    <p class="year-text">2025</p>
-    <h2 class="yellow-glow">If the world ever gets too loud...</h2>
-    <p style="margin-top: 15px; font-size: 1.1rem;">You will always have a home in me.</p>
-  </div>
-</div>
-
-<script>
-  const line1 = document.getElementById('line1');
-  const line2 = document.getElementById('line2');
-  const line3 = document.getElementById('line3');
-  const choices = document.getElementById('choices');
-  const memory = document.getElementById('memory');
-  const intro = document.getElementById('intro-wrap');
-  const final = document.getElementById('final-reveal');
-  const cat = document.querySelector('.cat');
-  const bird = document.querySelector('.bird');
-
-  // Entrance
-  setTimeout(()=> line1.classList.add('visible'), 800);
-  setTimeout(()=> line2.classList.add('visible'), 2800);
-  setTimeout(()=> line3.classList.add('visible'), 4800);
-  setTimeout(() => choices.classList.add('visible'), 6800);
-
-  // Floating
-  setInterval(() => {
-    cat.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
-    bird.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
-  }, 3000);
-
-  document.querySelectorAll('.choice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      intro.style.opacity = '0';
-      choices.style.opacity = '0';
-      choices.style.pointerEvents = 'none';
-
-      setTimeout(() => {
-        intro.style.display = 'none';
-        choices.style.display = 'none';
-        
-        const sequence = [
-          "Someone once told me something I didn’t know how to carry.",
-          "They said I had already given them something no one else had.",
-          "I’ve been holding that carefully ever since."
-        ];
-
-        let i = 0;
-        function showLines() {
-          if (i < sequence.length) {
-            memory.style.opacity = '0';
-            setTimeout(() => {
-              memory.textContent = sequence[i];
-              memory.style.opacity = '1';
-              i++;
-              setTimeout(showLines, 4500); 
-            }, 1000);
-          } else {
-            // UNSTUCK LOGIC: Transitions to the Anchor message
-            setTimeout(() => {
-                memory.style.opacity = '0';
-                setTimeout(() => {
-                    memory.style.display = 'none';
-                    final.style.display = 'block'; // Ensure it's in the DOM
-                    setTimeout(() => {
-                        final.style.opacity = '1'; // Fade it in
-                        final.style.transform = 'scale(1.1)'; // Slight grand zoom
-                    }, 100);
-                }, 2000);
-            }, 3000);
-          }
-        }
-        showLines();
-      }, 1500);
-    });
-  });
-</script>
-</body>
-</html>
+  .year-text { font-size: 0.9rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 30px; }
