@@ -3,193 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Quiet Place</title>
+    <title>The Anchor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Playfair+Display:ital@1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;900&family=Playfair+Display:ital@0;1&display=swap');
 
-        :root {
-            --soft-yellow: #fbe07c;
-            --deep-bg: #050505;
-            --text-gray: #888;
-        }
-
+        :root { --y: #fbe07c; --bg: #050505; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; cursor: crosshair; }
 
-        body, html {
-            background-color: var(--deep-bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        /* Cinematic Background */
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        .vignette { position: fixed; top: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 20%, #000 100%); pointer-events: none; z-index: 10; }
 
-        /* Subtle Grain Effect for "Memory" feel */
-        .noise {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 9999; pointer-events: none; opacity: 0.03;
-            background: url('https://media.giphy.com/media/oEI9uWU9HjHZC/giphy.gif');
-        }
+        section { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 5vw; }
 
-        .container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .huge-bg { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 15vw; color: #111; position: absolute; z-index: -1; text-transform: uppercase; letter-spacing: -10px; }
+        
+        .story-card { max-width: 700px; text-align: center; z-index: 5; }
+        .main-text { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 4vw, 3rem); line-height: 1.4; opacity: 0; transform: translateY(30px); }
+        .sub-text { font-size: 1rem; color: var(--y); letter-spacing: 5px; text-transform: uppercase; margin-top: 20px; opacity: 0; }
 
-        section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            position: relative;
-        }
+        /* The 600km Bridge */
+        .bridge-container { width: 80%; max-width: 800px; height: 1px; background: #222; position: relative; margin: 50px 0; }
+        .line-glow { position: absolute; height: 2px; background: var(--y); width: 0%; box-shadow: 0 0 20px var(--y); }
+        .km-text { font-size: 5vw; font-weight: 100; color: #333; font-family: 'Inter'; }
 
-        .line {
-            opacity: 0;
-            transform: translateY(10px);
-            font-size: 1.2rem;
-            font-weight: 200;
-            letter-spacing: 2px;
-            color: var(--text-gray);
-            transition: all 2s ease;
-        }
-
-        .italic {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: var(--soft-yellow);
-        }
-
-        /* Subtle Elements */
-        .cat-silhouette {
-            position: absolute; bottom: 10%; left: 5%;
-            opacity: 0.1; width: 50px; filter: grayscale(1);
-        }
-
-        .bird-silhouette {
-            position: absolute; top: 15%; right: 8%;
-            opacity: 0.1; width: 40px;
-        }
-
-        .sunflower-glow {
-            position: absolute;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(251, 224, 124, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* The Pause Moments */
-        .spacer { height: 50vh; }
-
-        #memory-echo {
-            max-width: 500px;
-            line-height: 2;
-        }
-
-        footer {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        /* Silent Cat/Bird elements */
+        .icon { position: absolute; opacity: 0.1; font-size: 3rem; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div class="noise"></div>
-    <div class="sunflower-glow" id="cursor-glow"></div>
+<div class="vignette"></div>
+<canvas id="stars"></canvas>
 
-    <div class="container">
-        <section>
-            <div class="line" id="l1">It’s quiet here.</div>
-            <div class="cat-silhouette">🐱</div>
-        </section>
-
-        <section>
-            <div class="line" id="l2">A place where you don't have to be <span class="italic">strong.</span></div>
-            <div class="bird-silhouette">🐦</div>
-        </section>
-
-        <section>
-            <div class="line" id="l3">
-                Some people don’t need to be loud<br>
-                to be <span class="italic">important.</span>
-            </div>
-        </section>
-
-        <div class="spacer"></div>
-
-        <section>
-            <div id="memory-echo">
-                <p class="line" id="l4">Someone once told me something I didn’t know how to carry.</p>
-                <div class="spacer" style="height: 10vh;"></div>
-                <p class="line" id="l5">They said I had already given them something no one else had.</p>
-                <div class="spacer" style="height: 10vh;"></div>
-                <p class="line" id="l6">I’ve been holding that carefully ever since.</p>
-            </div>
-        </section>
-
-        <div class="spacer"></div>
-
-        <footer>
-            <div class="line" id="l7" style="font-size: 0.9rem; letter-spacing: 4px;">2025</div>
-            <div class="spacer" style="height: 5vh;"></div>
-            <div class="line" id="l8" style="color: #fff;">If you ever need a home in the storm...</div>
-            <div class="spacer" style="height: 2vh;"></div>
-            <div class="line" id="l9" class="italic">I’m here.</div>
-            <div style="margin-top: 50px; opacity: 0.2; font-size: 2rem;">🌻</div>
-        </footer>
+<section>
+    <div class="huge-bg">SAFETY</div>
+    <div class="story-card">
+        <p class="main-text">It’s quiet here.</p>
+        <p class="sub-text">A place for you to just be.</p>
     </div>
+    <div class="icon" style="bottom: 10%; left: 10%;">🐱</div>
+</section>
 
-    <script>
-        // Smooth Cursor Glow
-        const glow = document.getElementById('cursor-glow');
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(glow, {
-                x: e.clientX - 150,
-                y: e.clientY - 150,
-                duration: 1.5,
-                ease: "power2.out"
-            });
+<section>
+    <div class="huge-bg">SEEN</div>
+    <div class="story-card">
+        <p class="main-text">Some people don't need to be <span style="color:var(--y)">loud</span> to be important.</p>
+        <p class="sub-text">You noticed when others didn't.</p>
+    </div>
+</section>
+
+<section id="bridge-section">
+    <div class="km-text" id="km-counter">600KM</div>
+    <div class="bridge-container">
+        <div class="line-glow" id="bridge-line"></div>
+    </div>
+    <div class="story-card">
+        <p class="main-text" style="font-size: 1.5rem;">"You don't have to be strong with me."</p>
+    </div>
+</section>
+
+<section>
+    <div class="story-card">
+        <p class="main-text">Someone once told me something I didn’t know how to carry...</p>
+        <p class="sub-text" style="opacity: 0.5;">I've been holding it carefully ever since.</p>
+    </div>
+    <div class="icon" style="top: 20%; right: 15%;">🐦</div>
+</section>
+
+<section>
+    <div class="story-card">
+        <p class="main-text" style="font-size: 1.2rem; color: var(--y); letter-spacing: 2px;">2025</p>
+        <p class="main-text">If you ever need a home in the storm...</p>
+        <p class="main-text" style="font-weight: 900; margin-top: 20px;">I'm here.</p>
+    </div>
+    <div style="margin-top: 40px; font-size: 2rem; opacity: 0.5;">🌻</div>
+</section>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Starfield Background
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let stars = [];
+    for(let i=0; i<100; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5});
+    function draw() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.fillStyle = "#fbe07c";
+        stars.forEach(s => {
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+            ctx.fill();
+            s.y -= 0.2; if(s.y < 0) s.y = canvas.height;
         });
+        requestAnimationFrame(draw);
+    }
+    draw();
 
-        // Intersection Observer for Pacing
-        const observerOptions = {
-            threshold: 0.5
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Logic to reveal lines with deliberate delays
-                    const lines = entry.target.querySelectorAll('.line');
-                    lines.forEach((line, index) => {
-                        setTimeout(() => {
-                            line.style.opacity = "1";
-                            line.style.transform = "translateY(0)";
-                        }, index * 1500); // 1.5s delay between lines for "thinking" pace
-                    });
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('section, footer').forEach(section => {
-            observer.observe(section);
+    // Text Animations
+    const cards = document.querySelectorAll('.story-card');
+    cards.forEach(card => {
+        gsap.to(card.querySelector('.main-text'), {
+            scrollTrigger: { trigger: card, start: "top 70%", toggleActions: "play none none reverse" },
+            opacity: 1, y: 0, duration: 1.5, ease: "power2.out"
         });
-
-        // Subtle parallax for silhouettes
-        document.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            gsap.to('.cat-silhouette', { y: scrolled * 0.1 });
-            gsap.to('.bird-silhouette', { y: scrolled * -0.1 });
+        gsap.to(card.querySelector('.sub-text'), {
+            scrollTrigger: { trigger: card, start: "top 60%", toggleActions: "play none none reverse" },
+            opacity: 1, duration: 2, delay: 0.5
         });
-    </script>
+    });
+
+    // Bridge Interaction
+    gsap.to("#bridge-line", {
+        scrollTrigger: { trigger: "#bridge-section", start: "top center", end: "bottom center", scrub: 1 },
+        width: "100%",
+        onUpdate: function() {
+            let p = this.progress();
+            let d = Math.round(600 - (600 * p));
+            document.getElementById('km-counter').innerText = d + "KM";
+            document.getElementById('km-counter').style.color = `rgba(251, 224, 124, ${p})`;
+        }
+    });
+
+    // Parallax Icons
+    gsap.to(".icon", {
+        scrollTrigger: { scrub: true },
+        y: -100, rotation: 10
+    });
+
+</script>
 </body>
 </html>
