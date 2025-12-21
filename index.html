@@ -27,11 +27,7 @@
     z-index: 5;
   }
   
-  /* Initial content wrap */
-  #intro-wrap {
-    transition: opacity 1.5s ease;
-    z-index: 10;
-  }
+  #intro-wrap { transition: opacity 1.5s ease; z-index: 10; }
 
   h1, h2, p, .choice-container {
     opacity: 0;
@@ -49,7 +45,6 @@
     text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
   }
 
-  /* Icons style */
   .sunflower, .cat, .bird {
     position: absolute;
     font-size: 50px;
@@ -64,8 +59,7 @@
 
   .choice-container {
     margin-top: 2rem;
-    display: flex;
-    gap: 2rem;
+    display: flex; gap: 2rem;
     pointer-events: none;
   }
   .choice-container.visible { pointer-events: auto; }
@@ -82,18 +76,26 @@
   }
   .choice-btn:hover { transform: scale(1.05); }
 
-  /* FIX: Memory Echo styling to ensure visibility */
   .memory-echo {
     font-style: italic;
     font-size: 1.4rem;
     max-width: 600px;
     line-height: 1.8;
-    color: #fbe07c; /* Warm yellow to ensure it pops off the black */
+    color: #fbe07c;
     position: absolute;
     opacity: 0;
     transition: opacity 2s ease;
     z-index: 20;
   }
+
+  /* NEW: Final Anchor Style */
+  #final-reveal {
+    opacity: 0;
+    transition: opacity 3s ease;
+    z-index: 30;
+    position: absolute;
+  }
+  .year-text { font-size: 0.9rem; letter-spacing: 5px; opacity: 0.5; margin-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -115,6 +117,12 @@
   </div>
 
   <p class="memory-echo" id="memory"></p>
+
+  <div id="final-reveal">
+    <p class="year-text">2025</p>
+    <h2 class="yellow-glow">If the world ever gets too loud...</h2>
+    <p style="margin-top: 15px; font-size: 1.1rem;">You will always have a home in me.</p>
+  </div>
 </div>
 
 <script>
@@ -124,25 +132,22 @@
   const choices = document.getElementById('choices');
   const memory = document.getElementById('memory');
   const intro = document.getElementById('intro-wrap');
+  const final = document.getElementById('final-reveal');
   const cat = document.querySelector('.cat');
   const bird = document.querySelector('.bird');
 
-  // Timeline
   setTimeout(()=> line1.classList.add('visible'), 800);
   setTimeout(()=> line2.classList.add('visible'), 2800);
   setTimeout(()=> line3.classList.add('visible'), 4800);
   setTimeout(() => choices.classList.add('visible'), 6800);
 
-  // Motion
   setInterval(() => {
     cat.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
     bird.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
   }, 3000);
 
-  // The Fix: Click handler that clears the screen and brings in memories
   document.querySelectorAll('.choice-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Clear the current view
       intro.style.opacity = '0';
       choices.style.opacity = '0';
       choices.style.pointerEvents = 'none';
@@ -160,13 +165,22 @@
         let i = 0;
         function showLines() {
           if (i < sequence.length) {
-            memory.style.opacity = '0'; // Fade out
+            memory.style.opacity = '0';
             setTimeout(() => {
               memory.textContent = sequence[i];
-              memory.style.opacity = '1'; // Fade in
+              memory.style.opacity = '1';
               i++;
-              setTimeout(showLines, 4500); // Time each line stays
+              setTimeout(showLines, 4500); 
             }, 1000);
+          } else {
+            // THE FINAL FIX: Move to the ending
+            setTimeout(() => {
+                memory.style.opacity = '0';
+                setTimeout(() => {
+                    memory.style.display = 'none';
+                    final.style.opacity = '1'; // Reveal the "Anchor" message
+                }, 2000);
+            }, 3000);
           }
         }
         showLines();
