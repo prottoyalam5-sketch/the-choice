@@ -3,117 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 | Sanctuary</title>
+    <title>2025</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&family=Playfair+Display:ital,wght@1,500&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #050508; color: #fff8dc; font-family: 'Quicksand', sans-serif; overflow: hidden; height: 100vh; cursor: crosshair; }
-
-        #canvas { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.8; }
-
-        .content-layer { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; pointer-events: none; }
-
-        .thought {
-            position: absolute; width: 85%; max-width: 650px; text-align: center;
-            opacity: 0; transform: scale(0.95); transition: all 3s ease;
+        body {
+            background: #0a0a0c;
+            color: #fbe07c;
+            font-family: 'Courier New', Courier, monospace; /* Like a raw typewriter note */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
         }
-        .thought.active { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #fbe07c; font-style: italic; margin-bottom: 20px; text-shadow: 0 0 20px rgba(251, 224, 124, 0.3); }
-        p { font-size: 1.1rem; line-height: 2; letter-spacing: 2px; opacity: 0.7; }
-
-        .heart-button {
-            margin-top: 40px; background: none; border: 1px solid rgba(251, 224, 124, 0.2);
-            color: #fbe07c; padding: 15px 35px; cursor: pointer; pointer-events: auto;
-            letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; transition: 0.6s;
+        .content {
+            width: 80%;
+            max-width: 500px;
+            animation: fadeIn 5s ease-in;
         }
-        .heart-button:hover { border-color: #fbe07c; background: rgba(251, 224, 124, 0.05); box-shadow: 0 0 20px rgba(251, 224, 124, 0.1); }
+
+        h1 { font-weight: 300; letter-spacing: 5px; margin-bottom: 30px; opacity: 0.6; }
+        p { line-height: 2; font-size: 1.1rem; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Subtle sunflower background glow */
+        .sunflower-glow {
+            position: fixed;
+            bottom: -10%; right: -10%;
+            font-size: 20rem;
+            opacity: 0.05;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
+<div class="sunflower-glow">🌻</div>
 
-<div class="content-layer">
-    <div id="t1" class="thought active">
-        <h1>You asked what you could give me.</h1>
-        <p>But the truth is, I don't need a thing. Because every time the world gets too loud, you are the only place that feels quiet.</p>
-        <button class="heart-button" onclick="next(2)">Step Into 2025</button>
-    </div>
-
-    <div id="t2" class="thought">
-        <h1>I noticed the magic in you.</h1>
-        <p>It’s not just the sunflowers or the way you love cats. It’s that when I was a "burden" to everyone else, you saw a home. You chose to stay when everyone else walked away.</p>
-        <button class="heart-button" onclick="next(3)">The Distance</button>
-    </div>
-
-    <div id="t3" class="thought">
-        <h1>600km is just a number.</h1>
-        <p>Even when I'm alone, I’m not. I feel you in the jokes that make the stress disappear, and in the way you held my hand through the screen when I was breaking.</p>
-        <button class="heart-button" onclick="next(4)">My Promise</button>
-    </div>
-
-    <div id="t4" class="thought">
-        <p style="letter-spacing: 15px; margin-bottom: 30px; opacity: 0.4;">2025</p>
-        <h1 style="font-size: 3.2rem;">I am your home.</h1>
-        <p>For the ice cream dates we haven't had yet, for the sunflowers I'll bring you, and for the life you saved just by being you.</p>
-        <button class="heart-button" style="background: #fbe07c; color: #000; font-weight: 600;" onclick="final()">Thank You For Staying</button>
-    </div>
+<div class="content">
+    <h1>2025</h1>
+    <p>
+        I spent so much time trying to find a "grand" way to tell you this, 
+        but then I remembered... you’re the only person in the world 
+        I can just be "me" with.
+    </p>
+    <br>
+    <p>
+        Thank you for being my anchor when I was a burden to everyone else. 
+        Thank you for holding my hand from 600km away.
+    </p>
+    <br>
+    <p style="color: #fff; font-style: italic;">
+        You are my home. Happy New Year.
+    </p>
 </div>
 
-<script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function init() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        particles = [];
-        for(let i=0; i<120; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5
-            });
-        }
-    }
-
-    function draw() {
-        ctx.fillStyle = '#050508';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fbe07c';
-        
-        particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            p.x += p.vx;
-            p.y += p.vy;
-            if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-            if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-        });
-        requestAnimationFrame(draw);
-    }
-
-    init(); draw();
-
-    function next(num) {
-        document.querySelectorAll('.thought').forEach(t => t.classList.remove('active'));
-        setTimeout(() => {
-            document.getElementById('t' + num).classList.add('active');
-        }, 500);
-    }
-
-    function final() {
-        // Creates a "Bloom" effect
-        particles.forEach(p => { p.vx *= 15; p.vy *= 15; });
-        document.querySelector('#t4 h1').textContent = "I Love You.";
-        document.querySelector('.heart-button').style.display = 'none';
-    }
-</script>
 </body>
 </html>
