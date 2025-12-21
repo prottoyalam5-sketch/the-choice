@@ -3,216 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Anchor | 2025</title>
+    <title>A Quiet Place</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300&family=Playfair+Display:ital@1&display=swap');
+
+        :root {
+            --soft-yellow: #fbe07c;
+            --deep-bg: #050505;
+            --text-gray: #888;
+        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: #050505;
+
+        body, html {
+            background-color: var(--deep-bg);
             color: #fff;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            height: 500vh; /* Long scroll for the journey */
+            scroll-behavior: smooth;
         }
 
-        /* The Progress Bar (Yellow) */
-        .progress-bar {
-            position: fixed; top: 0; left: 0; height: 4px;
-            background: #fbe07c; box-shadow: 0 0 15px #fbe07c;
-            width: 0%; z-index: 1000;
-        }
-
-        /* Floating Elements */
-        .petals {
+        /* Subtle Grain Effect for "Memory" feel */
+        .noise {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1;
+            z-index: 9999; pointer-events: none; opacity: 0.03;
+            background: url('https://media.giphy.com/media/oEI9uWU9HjHZC/giphy.gif');
         }
 
-        .section {
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        section {
             height: 100vh;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(10px);
+            font-size: 1.2rem;
+            font-weight: 200;
+            letter-spacing: 2px;
+            color: var(--text-gray);
+            transition: all 2s ease;
+        }
+
+        .italic {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--soft-yellow);
+        }
+
+        /* Subtle Elements */
+        .cat-silhouette {
+            position: absolute; bottom: 10%; left: 5%;
+            opacity: 0.1; width: 50px; filter: grayscale(1);
+        }
+
+        .bird-silhouette {
+            position: absolute; top: 15%; right: 8%;
+            opacity: 0.1; width: 40px;
+        }
+
+        .sunflower-glow {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(251, 224, 124, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* The Pause Moments */
+        .spacer { height: 50vh; }
+
+        #memory-echo {
+            max-width: 500px;
+            line-height: 2;
+        }
+
+        footer {
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
-            padding: 20px;
-            z-index: 2;
         }
-
-        .huge-text {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(2rem, 8vw, 6rem);
-            text-transform: uppercase;
-            line-height: 0.9;
-            opacity: 0;
-            text-align: center;
-        }
-
-        .yellow-text { color: #fbe07c; text-shadow: 0 0 30px rgba(251, 224, 124, 0.4); }
-
-        /* The "Hand Hold" Button */
-        .hand-hold-zone {
-            width: 300px; height: 300px;
-            border: 1px dashed #fbe07c;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.5s;
-            position: relative;
-        }
-
-        .hand-hold-zone:hover { background: rgba(251, 224, 124, 0.1); box-shadow: 0 0 50px #fbe07c; }
-
-        .distance-counter {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 1.5rem;
-            margin-top: 20px;
-        }
-
-        .story-card {
-            max-width: 600px;
-            font-size: 1.2rem;
-            line-height: 1.8;
-            background: rgba(255,255,255,0.05);
-            padding: 40px;
-            border-left: 3px solid #fbe07c;
-            backdrop-filter: blur(10px);
-            opacity: 0;
-        }
-
-        #final-canvas {
-            position: fixed; top: 0; left: 0; z-index: -1;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="progress-bar" id="bar"></div>
-    <canvas id="final-canvas"></canvas>
+    <div class="noise"></div>
+    <div class="sunflower-glow" id="cursor-glow"></div>
 
-    <section class="section">
-        <h1 class="huge-text" id="t1">The World Was <br><span class="yellow-text">Falling Apart.</span></h1>
-        <p style="margin-top:20px; font-style: italic; opacity: 0;" id="t2">University. Home. Everything felt like a burden.</p>
-    </section>
+    <div class="container">
+        <section>
+            <div class="line" id="l1">It’s quiet here.</div>
+            <div class="cat-silhouette">🐱</div>
+        </section>
 
-    <section class="section">
-        <div class="story-card" id="t3">
-            "When I got betrayed by everyone, when my best friend stabbed me... 
-            I felt like I was drowning in the drama. But you didn't look away."
-        </div>
-    </section>
+        <section>
+            <div class="line" id="l2">A place where you don't have to be <span class="italic">strong.</span></div>
+            <div class="bird-silhouette">🐦</div>
+        </section>
 
-    <section class="section">
-        <h1 class="huge-text" id="t4">600 KM <br><span class="yellow-text">AWAY.</span></h1>
-        <p style="max-width: 500px; text-align: center; margin-top: 20px;" id="t5">
-            You told me: "You don't have to be strong with me. You can cry. I am here."
-        </p>
-    </section>
+        <section>
+            <div class="line" id="l3">
+                Some people don’t need to be loud<br>
+                to be <span class="italic">important.</span>
+            </div>
+        </section>
 
-    <section class="section">
-        <h2 style="margin-bottom: 30px; font-family: 'Syncopate';">Hold my hand.</h2>
-        <div class="hand-hold-zone" id="hold-trigger">
-            <span id="hold-text" style="color:#fbe07c">PRESS & HOLD</span>
-        </div>
-        <div class="distance-counter" id="dist">DISTANCE: 600KM</div>
-    </section>
+        <div class="spacer"></div>
 
-    <section class="section" id="proposal-section">
-        <h1 class="huge-text yellow-text" style="opacity: 1;">Be my 2025.</h1>
-        <p style="margin-top: 20px; font-size: 1.5rem;">My sunflower. My peace. My home.</p>
-        <div style="margin-top: 40px; display: flex; gap: 20px;">
-            <button onclick="celebrate()" style="padding: 15px 40px; background: #fbe07c; border: none; font-weight: bold; cursor: pointer;">YES</button>
-        </div>
-    </section>
+        <section>
+            <div id="memory-echo">
+                <p class="line" id="l4">Someone once told me something I didn’t know how to carry.</p>
+                <div class="spacer" style="height: 10vh;"></div>
+                <p class="line" id="l5">They said I had already given them something no one else had.</p>
+                <div class="spacer" style="height: 10vh;"></div>
+                <p class="line" id="l6">I’ve been holding that carefully ever since.</p>
+            </div>
+        </section>
+
+        <div class="spacer"></div>
+
+        <footer>
+            <div class="line" id="l7" style="font-size: 0.9rem; letter-spacing: 4px;">2025</div>
+            <div class="spacer" style="height: 5vh;"></div>
+            <div class="line" id="l8" style="color: #fff;">If you ever need a home in the storm...</div>
+            <div class="spacer" style="height: 2vh;"></div>
+            <div class="line" id="l9" class="italic">I’m here.</div>
+            <div style="margin-top: 50px; opacity: 0.2; font-size: 2rem;">🌻</div>
+        </footer>
+    </div>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        // Smooth Cursor Glow
+        const glow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(glow, {
+                x: e.clientX - 150,
+                y: e.clientY - 150,
+                duration: 1.5,
+                ease: "power2.out"
+            });
+        });
 
-        // Background Animation (Sunflowers/Petals)
-        const canvas = document.getElementById('final-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Intersection Observer for Pacing
+        const observerOptions = {
+            threshold: 0.5
+        };
 
-        let particles = [];
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 5 + 1;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
-                this.color = Math.random() > 0.5 ? '#fbe07c' : '#ffffff';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y > canvas.height) this.y = 0;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Logic to reveal lines with deliberate delays
+                    const lines = entry.target.querySelectorAll('.line');
+                    lines.forEach((line, index) => {
+                        setTimeout(() => {
+                            line.style.opacity = "1";
+                            line.style.transform = "translateY(0)";
+                        }, index * 1500); // 1.5s delay between lines for "thinking" pace
+                    });
+                }
+            });
+        }, observerOptions);
 
-        function init() {
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
-        }
+        document.querySelectorAll('section, footer').forEach(section => {
+            observer.observe(section);
+        });
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        init(); animate();
-
-        // Scroll Animations
-        gsap.to("#t1", { scrollTrigger: "#t1", opacity: 1, y: -20, duration: 1.5 });
-        gsap.to("#t2", { scrollTrigger: "#t2", opacity: 1, delay: 0.5, duration: 1 });
-        gsap.to("#t3", { scrollTrigger: "#t3", opacity: 1, x: 20, duration: 1.5 });
-        gsap.to("#t4", { scrollTrigger: "#t4", opacity: 1, scale: 1.1, duration: 1 });
-        gsap.to("#bar", { scrollTrigger: { scrub: true }, width: "100%" });
-
-        // The "Hand Hold" Logic
-        let distance = 600;
-        let holding = false;
-        const distEl = document.getElementById('dist');
-        const holdTrigger = document.getElementById('hold-trigger');
-
-        holdTrigger.addEventListener('mousedown', () => { holding = true; shrinkDistance(); });
-        holdTrigger.addEventListener('mouseup', () => { holding = false; });
-        holdTrigger.addEventListener('touchstart', () => { holding = true; shrinkDistance(); });
-        holdTrigger.addEventListener('touchend', () => { holding = false; });
-
-        function shrinkDistance() {
-            if(!holding || distance <= 0) return;
-            distance -= 2;
-            distEl.innerText = `DISTANCE: ${distance}KM`;
-            distEl.style.color = "#fbe07c";
-            
-            if(distance <= 0) {
-                distEl.innerText = "WE ARE TOGETHER.";
-                gsap.to("body", { backgroundColor: "#1a1a00", duration: 2 });
-                return;
-            }
-            setTimeout(shrinkDistance, 10);
-        }
-
-        function celebrate() {
-            alert("She said Yes! (Now go hug her for real)");
-            // You can add a redirect to a video of you here
-        }
+        // Subtle parallax for silhouettes
+        document.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            gsap.to('.cat-silhouette', { y: scrolled * 0.1 });
+            gsap.to('.bird-silhouette', { y: scrolled * -0.1 });
+        });
     </script>
 </body>
 </html>
