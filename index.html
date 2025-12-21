@@ -24,21 +24,19 @@
     text-align: center;
     padding: 2rem;
     position: relative;
-    z-index: 5;
   }
   
-  #intro-wrap { transition: opacity 1.5s ease; z-index: 10; }
+  #intro-wrap, #choices, #memory {
+    transition: opacity 1.5s ease;
+  }
 
   h1, h2, p, .choice-container {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 1.5s ease, transform 1.5s ease;
+    transition: all 1.5s ease;
   }
   
-  .visible { 
-    opacity: 1 !important; 
-    transform: translateY(0) !important;
-  }
+  .visible { opacity: 1 !important; transform: translateY(0) !important; }
 
   .yellow-glow {
     color: #fbe07c;
@@ -49,19 +47,14 @@
     position: absolute;
     font-size: 50px;
     opacity: 0.5;
-    transition: all 4s ease-in-out;
-    user-select: none;
+    transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
   }
   .sunflower { bottom: 30px; right: 30px; font-size: 70px; }
   .cat { bottom: 12%; left: 8%; }
   .bird { top: 12%; right: 12%; }
 
-  .choice-container {
-    margin-top: 2rem;
-    display: flex; gap: 2rem;
-    pointer-events: none;
-  }
+  .choice-container { margin-top: 2rem; display: flex; gap: 2rem; pointer-events: none; }
   .choice-container.visible { pointer-events: auto; }
 
   .choice-btn {
@@ -71,32 +64,34 @@
     font-weight: 600;
     border-radius: 12px;
     cursor: pointer;
-    color: #000;
-    transition: transform 0.3s ease;
+    transition: 0.3s;
   }
   .choice-btn:hover { transform: scale(1.05); }
 
   .memory-echo {
     font-style: italic;
     font-size: 1.4rem;
-    max-width: 600px;
-    line-height: 1.8;
     color: #fbe07c;
     position: absolute;
     opacity: 0;
-    transition: opacity 2s ease;
-    z-index: 20;
   }
 
-  /* The Ending Style */
+  /* FIXED FINAL STYLING */
   #final-reveal {
-    opacity: 0;
-    transition: all 4s ease;
-    z-index: 30;
     position: absolute;
-    display: none; 
-    transform: scale(0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 4s ease;
+    transform: scale(0.8);
+    z-index: 999;
   }
+
+  #final-reveal.active-final {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: scale(1) !important;
+  }
+
   .year-text { font-size: 0.9rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 30px; }
 </style>
 </head>
@@ -113,17 +108,17 @@
   <div class="cat">🐱</div>
   <div class="bird">🐦</div>
 
-  <div class="choice-container" id="choices">
+  <div id="choices" class="choice-container">
     <button class="choice-btn">Take a step closer</button>
     <button class="choice-btn">Stay and observe</button>
   </div>
 
-  <p class="memory-echo" id="memory"></p>
+  <p id="memory" class="memory-echo"></p>
 
   <div id="final-reveal">
-    <p class="year-text">2025</p>
+    <p class="year-text">2 0 2 5</p>
     <h2 class="yellow-glow" style="font-size: 2.5rem;">If the world ever gets too loud...</h2>
-    <p style="margin-top: 20px; font-size: 1.3rem; letter-spacing: 1px;">You will always have a home in me.</p>
+    <p style="margin-top: 20px; font-size: 1.3rem;">You will always have a home in me.</p>
   </div>
 </div>
 
@@ -175,26 +170,21 @@
               setTimeout(showLines, 4500); 
             }, 1000);
           } else {
-            // ENDING TRANSITION
-            setTimeout(() => {
-                memory.style.opacity = '0';
-                
-                // Clear the background icons for the grand finale
-                clearInterval(floatInterval);
-                [sunflower, cat, bird].forEach(el => {
-                  el.style.opacity = '0';
-                  el.style.transform = 'scale(2) translateY(-100px)';
-                });
+            // THE FINAL REVEAL TRIGGER
+            memory.style.opacity = '0';
+            clearInterval(floatInterval);
+            
+            // Emojis fly away
+            [sunflower, cat, bird].forEach(el => {
+              el.style.opacity = '0';
+              el.style.transform = 'scale(3) translateY(-200px) rotate(45deg)';
+            });
 
-                setTimeout(() => {
-                    memory.style.display = 'none';
-                    final.style.display = 'block';
-                    setTimeout(() => {
-                        final.style.opacity = '1';
-                        final.style.transform = 'scale(1)'; // Grand entrance
-                    }, 500);
-                }, 2000);
-            }, 3000);
+            setTimeout(() => {
+                memory.style.display = 'none';
+                // Trigger the new active class
+                final.classList.add('active-final');
+            }, 2000);
           }
         }
         showLines();
