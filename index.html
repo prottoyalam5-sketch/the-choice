@@ -13,172 +13,159 @@
     background: #0b0b0b;
     color: #fff8dc;
     overflow: hidden;
-  }
-  .container {
-    width: 100%;
     height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 800px;
     text-align: center;
-    padding: 2rem;
     position: relative;
   }
   
-  h1, h2, p, .choice-container {
+  /* All text starts hidden */
+  .fade-text {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 1.5s ease;
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    transform: translateY(10px);
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  .visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+  .visible { opacity: 1 !important; transform: translateY(-50%) !important; }
 
   .yellow-glow {
     color: #fbe07c;
     text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
   }
 
-  .sunflower, .cat, .bird {
+  /* Floating Icons */
+  .icon {
     position: absolute;
     font-size: 50px;
     opacity: 0.5;
-    transition: all 4s ease-in-out;
-    z-index: 1;
+    transition: all 5s ease-in-out;
+    z-index: -1;
   }
-  .sunflower { bottom: 30px; right: 30px; font-size: 70px; }
-  .cat { bottom: 12%; left: 8%; }
-  .bird { top: 12%; right: 12%; }
 
-  .choice-container { margin-top: 2rem; display: flex; gap: 2rem; pointer-events: none; }
-  .choice-container.visible { pointer-events: auto; }
+  .choice-container {
+    opacity: 0;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 100px;
+    transition: opacity 1s;
+  }
 
   .choice-btn {
     background: #fbe07c;
     border: none;
-    padding: 0.8rem 1.5rem;
+    padding: 12px 24px;
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
   }
 
-  .memory-echo {
-    font-style: italic;
-    font-size: 1.4rem;
-    color: #fbe07c;
-    position: absolute;
+  /* Final Reveal Styling */
+  #final-msg {
     opacity: 0;
-    transition: opacity 2s ease;
+    transition: opacity 3s ease;
+    display: none;
   }
-
-  /* NEW FINAL STYLING */
-  #final-reveal {
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-    z-index: 999;
-    pointer-events: none;
-    transition: opacity 4s ease, transform 4s ease;
-    transform: scale(0.9);
-  }
-  .year-text { font-size: 1rem; letter-spacing: 15px; opacity: 0.4; margin-bottom: 25px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="intro-wrap">
-    <h1 id="line1">Late night...</h1>
-    <p id="line2" style="margin: 10px 0;">Soft lights, quiet room, just you.</p>
-    <h2 id="line3" class="yellow-glow">I’m here.</h2>
+  <div id="intro">
+    <h1 id="t1" class="fade-text">Late night...</h1>
+    <p id="t2" class="fade-text">Soft lights, quiet room, just you.</p>
+    <h2 id="t3" class="fade-text yellow-glow" style="font-size: 2.5rem;">I’m here.</h2>
   </div>
 
-  <div class="sunflower">🌻</div>
-  <div class="cat">🐱</div>
-  <div class="bird">🐦</div>
+  <div class="icon" id="sun" style="bottom: -100px; right: 20px; font-size: 70px;">🌻</div>
+  <div class="icon" id="cat" style="bottom: 50px; left: 20px;">🐱</div>
+  <div class="icon" id="bird" style="top: 50px; right: 20px;">🐦</div>
 
   <div id="choices" class="choice-container">
-    <button class="choice-btn">Take a step closer</button>
-    <button class="choice-btn">Stay and observe</button>
+    <button class="choice-btn" onclick="startStory()">Take a step closer</button>
+    <button class="choice-btn" onclick="startStory()">Stay and observe</button>
   </div>
 
-  <p id="memory" class="memory-echo"></p>
+  <p id="mem" class="fade-text yellow-glow" style="font-style: italic; font-size: 1.5rem;"></p>
 
-  <div id="final-reveal">
-    <p class="year-text">2 0 2 5</p>
-    <h2 class="yellow-glow" style="font-size: 2.5rem;">If the world ever gets too loud...</h2>
-    <p style="margin-top: 20px; font-size: 1.3rem;">You will always have a home in me.</p>
+  <div id="final-msg">
+    <p style="letter-spacing: 10px; opacity: 0.5; margin-bottom: 20px;">2 0 2 5</p>
+    <h2 class="yellow-glow" style="font-size: 2.2rem;">If the world ever gets too loud...</h2>
+    <p style="margin-top: 20px; font-size: 1.2rem;">You will always have a home in me.</p>
   </div>
 </div>
 
 <script>
-  const memory = document.getElementById('memory');
-  const intro = document.getElementById('intro-wrap');
-  const final = document.getElementById('final-reveal');
+  const t1 = document.getElementById('t1');
+  const t2 = document.getElementById('t2');
+  const t3 = document.getElementById('t3');
   const choices = document.getElementById('choices');
-  const sunflower = document.querySelector('.sunflower');
-  const cat = document.querySelector('.cat');
-  const bird = document.querySelector('.bird');
+  const mem = document.getElementById('mem');
+  const final = document.getElementById('final-msg');
+  const icons = [document.getElementById('sun'), document.getElementById('cat'), document.getElementById('bird')];
 
-  // Entrance
-  setTimeout(()=> document.getElementById('line1').classList.add('visible'), 500);
-  setTimeout(()=> document.getElementById('line2').classList.add('visible'), 2500);
-  setTimeout(()=> document.getElementById('line3').classList.add('visible'), 4500);
-  setTimeout(() => choices.classList.add('visible'), 6500);
+  // Animation Start
+  setTimeout(() => t1.classList.add('visible'), 500);
+  setTimeout(() => { t1.classList.remove('visible'); t2.classList.add('visible'); }, 2500);
+  setTimeout(() => { t2.classList.remove('visible'); t3.classList.add('visible'); }, 4500);
+  setTimeout(() => { choices.style.opacity = '1'; }, 6000);
 
-  // Floating logic
-  let floatInterval = setInterval(() => {
-    cat.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
-    bird.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
-  }, 3000);
+  function startStory() {
+    // 1. Clear Intro
+    t3.classList.remove('visible');
+    choices.style.opacity = '0';
+    choices.style.pointerEvents = 'none';
 
-  document.querySelectorAll('.choice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      intro.style.opacity = '0';
-      choices.style.opacity = '0';
+    // 2. Memory Timeline
+    const lines = [
+      "Someone once told me something I didn’t know how to carry.",
+      "They said I had already given them something no one else had.",
+      "I’ve been holding that carefully ever since."
+    ];
+
+    let delay = 1000;
+    lines.forEach((text, index) => {
+      setTimeout(() => {
+        mem.textContent = text;
+        mem.classList.add('visible');
+      }, delay);
+
+      delay += 4000;
 
       setTimeout(() => {
-        intro.style.display = 'none';
-        choices.style.display = 'none';
-        
-        const sequence = [
-          "Someone once told me something I didn’t know how to carry.",
-          "They said I had already given them something no one else had.",
-          "I’ve been holding that carefully ever since."
-        ];
-
-        let i = 0;
-        function showLines() {
-          if (i < sequence.length) {
-            memory.style.opacity = '0';
-            setTimeout(() => {
-              memory.textContent = sequence[i];
-              memory.style.opacity = '1';
-              i++;
-              setTimeout(showLines, 4500); 
-            }, 1000);
-          } else {
-            // THE REVEAL Logic
-            memory.style.opacity = '0';
-            clearInterval(floatInterval);
-            
-            // Emojis fly away
-            [sunflower, cat, bird].forEach(el => {
-              el.style.opacity = '0';
-              el.style.transform = 'translateY(-600px) rotate(180deg)';
-            });
-
-            // BRUTE FORCE FINAL SHOW
-            setTimeout(() => {
-                memory.style.display = 'none';
-                final.style.opacity = '1';
-                final.style.transform = 'scale(1)';
-            }, 1500);
-          }
-        }
-        showLines();
-      }, 1000);
+        mem.classList.remove('visible');
+      }, delay - 500);
     });
-  });
+
+    // 3. Final Reveal (The part that was getting stuck)
+    setTimeout(() => {
+      // Make icons fly away
+      icons.forEach(icon => {
+        icon.style.transform = 'translateY(-1000px) rotate(360deg)';
+        icon.style.opacity = '0';
+      });
+
+      // Show the final message
+      mem.style.display = 'none';
+      final.style.display = 'block';
+      setTimeout(() => {
+        final.style.opacity = '1';
+      }, 100);
+    }, delay + 1000);
+  }
 </script>
+
 </body>
 </html>
