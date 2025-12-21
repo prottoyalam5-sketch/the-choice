@@ -3,277 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anika | The 2026 Odyssey</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,600;1,700&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>For My Anchor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        :root { 
-            --gold: #fbbf24; 
-            --lavender: #c4b5fd;
-            --blue: #60a5fa;
-            --void: #020617; 
+        :root {
+            --gold: #FFD700;
+            --dark-gold: #b8860b;
+            --bg: #0a0a0a;
+            --text: #ffffff;
         }
-        body { margin: 0; background-color: var(--void); color: #fff; font-family: 'Space Grotesk', sans-serif; overflow: hidden; height: 1000vh; cursor: none; }
-        
-        #cursor-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; }
-        #cursor-ring { width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; transition: transform 0.1s ease-out, border-color 0.5s; }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; }
-        .vignette { position: fixed; inset: 0; background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,0.8) 100%); z-index: 5; pointer-events: none; }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
 
-        .ui-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        
-        .narrative-text {
-            opacity: 0;
-            transform: scale(0.8) translateZ(0);
-            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
-            position: absolute;
-            width: 80%;
-            max-width: 900px;
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
             pointer-events: none;
-            filter: blur(10px);
+            z-index: 9999;
+            mix-blend-mode: difference;
+            box-shadow: 0 0 20px var(--gold);
         }
 
-        .narrative-text.active {
-            opacity: 1;
-            transform: scale(1) translateZ(100px);
-            filter: blur(0);
+        /* Narrative Sections */
+        .section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            opacity: 0;
         }
 
-        .serif { font-family: 'Cormorant Garamond', serif; }
-        
-        .fracture {
-            color: #ef4444;
-            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-            animation: jitter 0.1s infinite alternate;
+        .shatter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: all;
         }
-        @keyframes jitter { 0% { transform: translate(1px, 0); } 100% { transform: translate(-1px, 1px); } }
 
-        #km-ping {
-            position: fixed; bottom: 40px; left: 40px; font-size: 0.6rem;
-            letter-spacing: 0.6em; color: var(--gold); z-index: 100;
-            text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px;
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px var(--gold));
+            font-size: 2rem;
         }
 
-        .progress-indicator {
-            position: fixed; right: 40px; top: 50%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 20px; z-index: 100;
+        h1, h2 {
+            font-weight: 300;
+            letter-spacing: 5px;
+            text-transform: uppercase;
         }
-        .dot { width: 4px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.5s; }
-        .dot.active { background: var(--gold); transform: scale(2.5); box-shadow: 0 0 10px var(--gold); }
 
-        .btn-launch {
-            pointer-events: auto;
-            border: 1px solid var(--gold);
-            padding: 2rem 5rem; color: var(--gold);
-            background: transparent; letter-spacing: 1.2em;
-            text-transform: uppercase; font-size: 0.7rem;
-            transition: all 0.8s; cursor: pointer;
-            margin-top: 5vh;
-            backdrop-filter: blur(10px);
+        .highlight {
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
-        .btn-launch:hover { background: var(--gold); color: #000; box-shadow: 0 0 100px var(--gold); letter-spacing: 1.5em; }
 
-        .chat-shield {
-            border-left: 1px solid var(--lavender);
-            padding: 2rem; margin: 2rem 0;
-            text-align: left; background: rgba(255,255,255,0.02);
+        /* The Bridge Interaction */
+        .bridge-container {
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .marker {
+            position: absolute;
+            bottom: -10px;
+            transition: all 0.5s ease;
+        }
+
+        #hold-btn {
+            padding: 20px 40px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 30px;
+        }
+
+        #hold-btn:active {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 50px var(--gold);
+        }
+
+        .cat-icon { font-size: 3rem; }
+        .sunflower { color: #FFD700; font-size: 4rem; }
+
+        #final-message {
+            display: none;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+        }
+
+        .bird {
+            position: absolute;
+            animation: fly 10s linear infinite;
+        }
+
+        @keyframes fly {
+            from { left: -10%; top: 20%; }
+            to { left: 110%; top: 10%; }
         }
     </style>
 </head>
 <body>
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
-    <div id="km-ping">DISTANCE: 600,000m</div>
-    <div class="progress-indicator" id="progress"></div>
-    <div class="vignette"></div>
+    <div id="cursor"></div>
 
-    <div class="ui-layer" id="narrative-container">
-        <!-- Section 1 -->
-        <div class="narrative-text" data-depth="0">
-            <p class="text-[0.6rem] tracking-[2em] mb-10 opacity-40 uppercase">Memory Leak: 2025</p>
-            <h1 class="serif italic text-7xl md:text-9xl mb-8 leading-tight">A world of static.</h1>
-            <p class="text-lg tracking-[0.4em] font-light opacity-50">I was broadcasting to a void that didn't listen.</p>
-        </div>
-
-        <!-- Section 2 -->
-        <div class="narrative-text" data-depth="2000">
-            <h2 class="text-6xl md:text-8xl font-bold mb-10 uppercase tracking-tighter">TRUST BECAME<br><span class="fracture">A FRACTURE.</span></h2>
-            <p class="text-xl md:text-2xl font-light leading-relaxed opacity-80 max-w-2xl mx-auto">
-                My "best friend" walked. My parents doubted. The world called my pain "Drama." 
-                I was ready to shut down.
-            </p>
-        </div>
-
-        <!-- Section 3 -->
-        <div class="narrative-text" data-depth="4000">
-            <p class="text-[0.6rem] tracking-[1.5em] mb-8 opacity-40 uppercase">Signal Detected</p>
-            <h2 class="serif italic text-6xl md:text-8xl mb-8 text-blue-300 italic">But 600km away...</h2>
-            <div class="chat-shield">
-                <p class="serif italic text-2xl md:text-4xl leading-tight">
-                    "You don't have to be strong with me. You can cry, I am here."
-                </p>
-            </div>
-            <p class="text-lg opacity-40 mt-8">Your voice was the only bridge that didn't collapse.</p>
-        </div>
-
-        <!-- Section 4 -->
-        <div class="narrative-text" data-depth="6000">
-            <h2 class="text-8xl md:text-[14rem] font-bold mb-10">"TRY IT."</h2>
-            <p class="text-xl md:text-2xl italic opacity-70 max-w-xl mx-auto">
-                You didn't fix me. You just showed me I wasn't broken. 
-                You are the reason I am still here to see this year end.
-            </p>
-        </div>
-
-        <!-- Section 5 -->
-        <div class="narrative-text" data-depth="8000">
-            <h2 class="serif italic text-7xl md:text-9xl text-blue-400">The 4AM Ache.</h2>
-            <p class="text-xl md:text-3xl mt-10 font-light max-w-2xl mx-auto opacity-70 leading-relaxed italic">
-                LDR is a physical weight. Every morning I wake up reaching for a ghost of you. 
-                The distance is 600,000 meters, but my heart is already there.
-            </p>
-        </div>
-
-        <!-- Section 6 -->
-        <div class="narrative-text" data-depth="9500">
-            <h1 class="serif italic text-9xl md:text-[16rem] text-yellow-400 mb-10 leading-none">ANIKA</h1>
-            <p class="text-xl md:text-2xl font-light opacity-80 max-w-xl mx-auto leading-loose">
-                Thank you for being my Lavender and my Sunflower. <br>
-                <strong>Let's break the distance in 2026.</strong>
-            </p>
-            <button class="btn-launch" onclick="launchSupernova()">Launch Our Year</button>
+    <div class="shatter-overlay" id="overlay">
+        <div style="text-align: center;">
+            <p id="typed-intro" style="font-size: 1.5rem; color: #666;"></p>
+            <button id="start-trigger" style="margin-top:20px; background:none; border:1px solid #444; color:#444; padding:10px 20px;">[ Heal the Darkness ]</button>
         </div>
     </div>
 
+    <main id="main-content">
+        <section class="section" id="s1">
+            <div class="content">
+                <h2>When the world felt <span class="highlight">heavy</span></h2>
+                <p>University stress, home, the betrayals...</p>
+                <p>Everyone saw a "burden."</p>
+            </div>
+        </section>
+
+        <section class="section" id="s2">
+            <div class="content">
+                <h2>But you said...</h2>
+                <h1 class="highlight">"You don't have to be strong with me."</h1>
+                <p>600km felt like 0 when you held my hand emotionally.</p>
+            </div>
+            <div class="floating-element sunflower">🌻</div>
+            <div class="floating-element cat-icon" style="top: 20%; left: 10%;">🐱</div>
+        </section>
+
+        <section class="section" id="s3">
+            <div class="content">
+                <h2>Bridge the distance</h2>
+                <div class="bridge-container">
+                    <div class="marker" id="me" style="left: 0;">📍 Me</div>
+                    <div class="marker" id="her" style="right: 0;">📍 You</div>
+                </div>
+                <p id="dist-text">Distance: 600km</p>
+                <button id="hold-btn">HOLD TO CLOSE THE GAP</button>
+            </div>
+        </section>
+
+        <section class="section" id="final">
+            <div class="content">
+                <h1 style="font-size: 4rem;">Happy New Year</h1>
+                <p>You are my home, my peace, and my anchor.</p>
+                <h2 class="highlight">Will you stay by my side in 2025 and beyond?</h2>
+                <div class="sunflower">🌻</div>
+                <p style="margin-top: 20px;">I love you.</p>
+            </div>
+        </section>
+    </main>
+
     <script>
-        let scene, camera, renderer, starField, clock = new THREE.Clock();
-        let starsGeometry, starsMaterial;
-        let isWarping = false;
-        const texts = document.querySelectorAll('.narrative-text');
-        const dot = document.getElementById('cursor-dot');
-        const ring = document.getElementById('cursor-ring');
-
-        // Cursor logic
-        window.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px';
-            dot.style.top = e.clientY + 'px';
-            setTimeout(() => {
-                ring.style.left = (e.clientX - 20) + 'px';
-                ring.style.top = (e.clientY - 20) + 'px';
-            }, 80);
+        // Custom Cursor
+        const cursor = document.querySelector('#cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+        // Intro Logic
+        const startBtn = document.querySelector('#start-trigger');
+        startBtn.addEventListener('click', () => {
+            gsap.to('#overlay', { duration: 2, opacity: 0, pointerEvents: 'none' });
+            startExperience();
+        });
 
-            // High-Performance Starfield
-            starsGeometry = new THREE.BufferGeometry();
-            const positions = [];
-            const velocities = [];
-            for (let i = 0; i < 15000; i++) {
-                positions.push((Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000, (Math.random() - 0.5) * 3000);
-                velocities.push(Math.random() * 2 + 1);
-            }
-            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            starsGeometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities, 1));
-            
-            starsMaterial = new THREE.PointsMaterial({
-                size: 1.5,
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.8,
-                sizeAttenuation: true
-            });
-
-            starField = new THREE.Points(starsGeometry, starsMaterial);
-            scene.add(starField);
-
-            // Create progress dots
-            const progress = document.getElementById('progress');
-            texts.forEach(() => {
-                const d = document.createElement('div');
-                d.className = 'dot';
-                progress.appendChild(d);
-            });
-
-            animate();
+        function startExperience() {
+            const tl = gsap.timeline();
+            tl.to("#s1", { opacity: 1, duration: 2 })
+              .to("#s1", { opacity: 0, duration: 1, delay: 3 })
+              .to("#s2", { opacity: 1, duration: 2 })
+              .to("#s2", { opacity: 0, duration: 1, delay: 3 })
+              .to("#s3", { opacity: 1, duration: 2 });
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            let scrollY = window.scrollY;
-            let t = clock.getElapsedTime();
+        // The Hold Interaction
+        const holdBtn = document.querySelector('#hold-btn');
+        const me = document.querySelector('#me');
+        const distText = document.querySelector('#dist-text');
+        let interval;
+        let distance = 600;
 
-            // Camera movement - The "Odyssey" Feel
-            camera.position.z = 1000 - (scrollY * 0.2);
-            camera.rotation.z = scrollY * 0.0001;
-
-            // Star Warp logic
-            const positions = starsGeometry.attributes.position.array;
-            const vels = starsGeometry.attributes.velocity.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                // Move stars toward camera
-                positions[i + 2] += (isWarping ? 50 : 2) + vels[i/3]; 
-                if (positions[i + 2] > 2000) positions[i + 2] = -2000;
-            }
-            starsGeometry.attributes.position.needsUpdate = true;
-
-            // Text Switching logic
-            texts.forEach((text, i) => {
-                const depth = parseInt(text.dataset.depth);
-                const distance = Math.abs(scrollY - depth);
-                const dots = document.querySelectorAll('.dot');
-                
-                if (distance < 500) {
-                    text.classList.add('active');
-                    dots[i].classList.add('active');
+        holdBtn.addEventListener('mousedown', () => {
+            interval = setInterval(() => {
+                if(distance > 0) {
+                    distance -= 5;
+                    let pos = ((600 - distance) / 600) * 85;
+                    me.style.left = pos + '%';
+                    distText.innerText = `Distance: ${distance}km`;
+                    distText.style.color = '#FFD700';
                 } else {
-                    text.classList.remove('active');
-                    dots[i].classList.remove('active');
+                    clearInterval(interval);
+                    showFinal();
                 }
-            });
-
-            // UI updates
-            const km = Math.max(0, 600000 - Math.floor(scrollY * 60));
-            document.getElementById('km-ping').innerText = `DISTANCE: ${km.toLocaleString()}m`;
-
-            renderer.render(scene, camera);
-        }
-
-        function launchSupernova() {
-            isWarping = true;
-            ring.style.borderColor = "#fbbf24";
-            ring.style.transform = "scale(200)";
-            
-            // Visual "Flash" that is actually a 3D effect
-            let flash = setInterval(() => {
-                starsMaterial.size += 1;
-                starsMaterial.opacity -= 0.02;
-                if(starsMaterial.opacity <= 0) {
-                    clearInterval(flash);
-                    document.body.style.background = "var(--gold)";
-                    setTimeout(() => {
-                        alert("The distance is closed. Happy New Year, Anika.");
-                        location.reload();
-                    }, 1000);
-                }
-            }, 50);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            }, 20);
         });
 
-        init3D();
+        holdBtn.addEventListener('mouseup', () => clearInterval(interval));
+
+        function showFinal() {
+            gsap.to("#s3", { opacity: 0, duration: 1 });
+            gsap.to("#final", { opacity: 1, duration: 3, delay: 1 });
+            createSunflowers();
+        }
+
+        function createSunflowers() {
+            for(let i=0; i<20; i++) {
+                let div = document.createElement('div');
+                div.innerHTML = i % 2 === 0 ? "🌻" : "🐱";
+                div.className = "floating-element";
+                div.style.left = Math.random() * 100 + "vw";
+                div.style.top = Math.random() * 100 + "vh";
+                document.body.appendChild(div);
+                gsap.to(div, {
+                    y: -100,
+                    opacity: 0,
+                    duration: 2 + Math.random() * 3,
+                    delay: Math.random() * 2,
+                    repeat: -1
+                });
+            }
+        }
+
+        // Typing effect for intro
+        const text = "In the middle of the betrayal, you were the only truth I had left...";
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                document.getElementById("typed-intro").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 100);
+            }
+        }
+        type();
+
     </script>
 </body>
 </html>
