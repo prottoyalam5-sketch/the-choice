@@ -1,206 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2025 | Our Story</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&family=Playfair+Display:ital@1&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our 2025</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500&family=Playfair+Display:ital@1&display=swap');
 
-  * {margin:0; padding:0; box-sizing:border-box;}
-  
-  body {
-    font-family: 'Quicksand', sans-serif;
-    background: #050508;
-    color: #fff8dc;
-    overflow: hidden;
-    height: 100vh;
-  }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Epic Animated Nebula Background */
-  .bg-glow {
-    position: fixed;
-    top: 50%; left: 50%;
-    width: 100vw; height: 100vh;
-    background: radial-gradient(circle at center, rgba(251, 224, 124, 0.08) 0%, transparent 70%);
-    transform: translate(-50%, -50%);
-    animation: breathe 8s infinite ease-in-out;
-    z-index: 1;
-  }
+        body {
+            background-color: #050508;
+            color: #fff8dc;
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  @keyframes breathe {
-    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
-  }
+        /* Epic Background */
+        #canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+        }
 
-  .container {
-    position: relative;
-    width: 100%; height: 100vh;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    z-index: 10;
-    text-align: center;
-  }
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 90%;
+            max-width: 700px;
+        }
 
-  .text-box {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 2.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: absolute;
-    width: 80%;
-    pointer-events: none;
-  }
+        .scene {
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease, transform 2s ease;
+            transform: translateY(20px);
+        }
 
-  .text-box.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
+        .active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-  .gold-text {
-    color: #fbe07c;
-    text-shadow: 0 0 20px rgba(251, 224, 124, 0.5);
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-  }
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #fbe07c;
+            text-shadow: 0 0 20px rgba(251, 224, 124, 0.4);
+            margin-bottom: 20px;
+        }
 
-  .choice-btn {
-    margin-top: 40px;
-    background: transparent;
-    border: 1px solid rgba(251, 224, 124, 0.4);
-    color: #fbe07c;
-    padding: 15px 35px;
-    border-radius: 2px;
-    letter-spacing: 3px;
-    cursor: pointer;
-    transition: 0.5s;
-    opacity: 0;
-  }
+        .glow-text {
+            font-size: 2.2rem;
+            line-height: 1.4;
+        }
 
-  .choice-btn.show { opacity: 1; }
-  .choice-btn:hover { background: #fbe07c; color: #000; box-shadow: 0 0 30px #fbe07c; }
+        .btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: transparent;
+            border: 1px solid #fbe07c;
+            color: #fbe07c;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: 0.5s;
+        }
 
-  #finale {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-  }
+        .btn:hover {
+            background: #fbe07c;
+            color: #000;
+            box-shadow: 0 0 30px #fbe07c;
+        }
 
-  .sparkle {
-    position: absolute;
-    background: #fbe07c;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 5;
-  }
-</style>
+        .sub-text {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
+<canvas id="canvas"></canvas>
 
 <div class="container">
-  <div class="text-box" id="step1">
-    <p style="letter-spacing: 5px; opacity: 0.7;">IN A WORLD THAT NEVER STOPS</p>
-  </div>
+    <div id="scene1" class="scene active">
+        <p class="sub-text" style="margin-bottom: 10px;">LATE NIGHTS & DEEP THOUGHTS</p>
+        <h1 class="glow-text">The world is loud... but here, it's just us.</h1>
+        <button class="btn" onclick="nextScene(2)">Enter Our Space</button>
+    </div>
 
-  <div class="text-box" id="step2">
-    <h2 class="gold-text">You found a way to be the quiet.</h2>
-  </div>
+    <div id="scene2" class="scene">
+        <h2 id="story-text" class="glow-text"></h2>
+    </div>
 
-  <div class="text-box" id="step3">
-    <h2 class="gold-text">And I found a way to be your anchor.</h2>
-    <button class="choice-btn" id="start-btn" onclick="startEpicJourney()">ENTER 2025</button>
-  </div>
-
-  <div class="text-box" id="story-text"></div>
-
-  <div id="finale">
-    <p style="letter-spacing: 15px; margin-bottom: 20px; opacity: 0.5;">A NEW CHAPTER</p>
-    <h1 class="gold-text" style="font-size: 3.5rem;">I am your home.</h1>
-    <p style="margin-top: 20px; max-width: 500px; font-weight: 300;">
-      Whenever the storm returns, look for my light. <br> I'm not going anywhere.
-    </p>
-    <button class="choice-btn show" style="margin-top: 50px;" onclick="ignite()">HAPPY NEW YEAR</button>
-  </div>
+    <div id="scene3" class="scene">
+        <p class="sub-text" style="letter-spacing: 15px; margin-bottom: 20px;">2 0 2 5</p>
+        <h1 style="font-size: 3rem;">I am your home.</h1>
+        <p class="sub-text">You are my anchor, and I am yours.<br>No matter the storm, I am not going anywhere.</p>
+        <button class="btn" style="background: #fbe07c; color: #000; margin-top: 50px;" onclick="sparkle()">Happy New Year</button>
+    </div>
 </div>
 
 <script>
-  const s1 = document.getElementById('step1');
-  const s2 = document.getElementById('step2');
-  const s3 = document.getElementById('step3');
-  const btn = document.getElementById('start-btn');
-  const story = document.getElementById('story-text');
-  const finale = document.getElementById('finale');
+    // Starfield Background Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
 
-  // Start the movie-style intro
-  setTimeout(() => s1.classList.add('active'), 1000);
-  setTimeout(() => { s1.classList.remove('active'); s2.classList.add('active'); }, 4000);
-  setTimeout(() => { s2.classList.remove('active'); s3.classList.add('active'); }, 7500);
-  setTimeout(() => btn.classList.add('show'), 9000);
-
-  function startEpicJourney() {
-    s3.classList.remove('active');
-    
-    const narrative = [
-      "You remember the nights we talked until the sun came up?",
-      "You told me I gave you something no one else ever could.",
-      "A sense of peace. A place to land.",
-      "In 2024, we built the foundation.",
-      "In 2025... I promise to be the light in every storm you face."
-    ];
-
-    let time = 1000;
-    narrative.forEach((line, i) => {
-      setTimeout(() => {
-        story.innerHTML = `<h2 class="gold-text" style="font-size: 1.8rem;">${line}</h2>`;
-        story.classList.add('active');
-      }, time);
-      
-      time += 4500;
-      
-      setTimeout(() => {
-        story.classList.remove('active');
-      }, time - 500);
-    });
-
-    // The Finale Trigger
-    setTimeout(() => {
-      story.style.display = 'none';
-      finale.style.display = 'flex';
-      setTimeout(() => finale.style.opacity = '1', 100);
-      finale.classList.add('active');
-    }, time);
-  }
-
-  function ignite() {
-    for(let i=0; i<80; i++) {
-      createSpark();
+    function initStars() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5
+            });
+        }
     }
-  }
 
-  function createSpark() {
-    const s = document.createElement('div');
-    s.className = 'sparkle';
-    document.body.appendChild(s);
-    
-    const size = Math.random() * 4 + 2;
-    s.style.width = size + 'px';
-    s.style.height = size + 'px';
-    
-    const x = window.innerWidth / 2;
-    const y = window.innerHeight / 2;
-    
-    const destX = x + (Math.random() - 0.5) * 800;
-    const destY = y + (Math.random() - 0.5) * 800;
-    
-    s.animate([
-      { transform: `translate(${x}px, ${y}px)`, opacity: 1 },
-      { transform: `translate(${destX}px, ${destY}px)`, opacity: 0 }
-    ], {
-      duration: 2000 + Math.random() * 2000,
-      easing: 'cubic-bezier(0, .9, .57, 1)'
-    }).onfinish = () => s.remove();
-  }
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fbe07c';
+        stars.forEach(s => {
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+            ctx.fill();
+            s.y -= s.speed;
+            if (s.y < 0) s.y = canvas.height;
+        });
+        requestAnimationFrame(drawStars);
+    }
+
+    initStars();
+    drawStars();
+
+    // Scene Management
+    function nextScene(num) {
+        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+        
+        if (num === 2) {
+            document.getElementById('scene2').classList.add('active');
+            runStory();
+        } else {
+            document.getElementById(num).classList.add('active');
+        }
+    }
+
+    function runStory() {
+        const lines = [
+            "I remember everything you told me...",
+            "How I gave you a peace you couldn't find anywhere else.",
+            "I’ve carried that with me every day.",
+            "In 2025, I promise to keep being that peace.",
+            "Through every wave and every storm."
+        ];
+        
+        const textEl = document.getElementById('story-text');
+        let i = 0;
+
+        function displayLine() {
+            if (i < lines.length) {
+                textEl.style.opacity = 0;
+                setTimeout(() => {
+                    textEl.textContent = lines[i];
+                    textEl.style.opacity = 1;
+                    i++;
+                    setTimeout(displayLine, 4000);
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    document.getElementById('scene2').classList.remove('active');
+                    document.getElementById('scene3').classList.add('active');
+                }, 2000);
+            }
+        }
+        displayLine();
+    }
+
+    function sparkle() {
+        const colors = ['#fbe07c', '#ffffff', '#ffd700'];
+        for (let i = 0; i < 50; i++) {
+            const div = document.createElement('div');
+            div.style.position = 'fixed';
+            div.style.width = '4px';
+            div.style.height = '4px';
+            div.style.background = colors[Math.floor(Math.random() * colors.length)];
+            div.style.left = '50%';
+            div.style.top = '50%';
+            div.style.borderRadius = '50%';
+            document.body.appendChild(div);
+
+            const destX = (Math.random() - 0.5) * 1000;
+            const destY = (Math.random() - 0.5) * 1000;
+
+            div.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { transform: `translate(${destX}px, ${destY}px)`, opacity: 0 }
+            ], {
+                duration: 2000,
+                easing: 'cubic-bezier(0, .9, .57, 1)'
+            }).onfinish = () => div.remove();
+        }
+    }
 </script>
+
 </body>
 </html>
