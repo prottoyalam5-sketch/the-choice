@@ -3,194 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 | For My Safe Place</title>
+    <title>2025 | For You</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Quicksand:wght@300;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500&family=Playfair+Display:ital@1&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #020205; color: #fff8dc; font-family: 'Quicksand', sans-serif; overflow: hidden; height: 100vh; }
-
-        /* The Deep Space Background */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent 20%, #020205 90%); z-index: 1; pointer-events: none; }
-
-        .container { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; }
-
-        /* Story Scenes */
-        .scene { position: absolute; width: 85%; max-width: 900px; opacity: 0; pointer-events: none; transition: all 3s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(0.9); }
-        .scene.active { opacity: 1; pointer-events: auto; transform: scale(1); }
-
-        h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); color: #fbe07c; text-shadow: 0 0 30px rgba(251, 224, 124, 0.4); margin-bottom: 25px; font-style: italic; line-height: 1.2; }
-        p { font-size: clamp(1rem, 3vw, 1.4rem); letter-spacing: 2px; line-height: 1.8; opacity: 0.9; font-weight: 300; }
-
-        .btn {
-            margin-top: 40px; background: transparent; border: 1px solid rgba(251, 224, 124, 0.5); color: #fbe07c;
-            padding: 20px 50px; cursor: pointer; letter-spacing: 5px; text-transform: uppercase;
-            transition: 0.5s; font-weight: 500; border-radius: 2px;
+        body { 
+            background: #08080a; 
+            color: #fff8dc; 
+            font-family: 'Quicksand', sans-serif; 
+            overflow: hidden; 
+            height: 100vh;
         }
-        .btn:hover { background: #fbe07c; color: #000; box-shadow: 0 0 50px rgba(251, 224, 124, 0.6); }
 
-        .emoji-float { position: absolute; font-size: 2rem; opacity: 0.4; z-index: 2; pointer-events: none; }
-        
-        #final-btn { display: none; }
+        /* Ambient Glow Background */
+        .ambient {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a150a 0%, #08080a 100%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .scene {
+            position: absolute;
+            width: 80%;
+            max-width: 600px;
+            opacity: 0;
+            transition: all 2.5s ease;
+            transform: scale(0.98);
+            pointer-events: none;
+        }
+
+        .scene.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #fbe07c;
+            margin-bottom: 20px;
+            font-style: italic;
+            text-shadow: 0 0 20px rgba(251, 224, 124, 0.3);
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* Floating Elements */
+        .floaty {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            z-index: 2;
+            transition: transform 0.5s ease;
+        }
+
+        .next-btn {
+            margin-top: 40px;
+            background: transparent;
+            border: 1px solid rgba(251, 224, 124, 0.3);
+            color: #fbe07c;
+            padding: 12px 30px;
+            cursor: pointer;
+            letter-spacing: 3px;
+            transition: 0.5s;
+        }
+
+        .next-btn:hover {
+            border-color: #fbe07c;
+            background: rgba(251, 224, 124, 0.05);
+        }
     </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-<div class="overlay"></div>
+<div class="ambient"></div>
 
 <div class="container">
     <div id="s1" class="scene active">
-        <p style="margin-bottom: 20px; letter-spacing: 8px;">THE WORLD WAS LOUD</p>
-        <h1>When everyone else saw a burden...</h1>
-        <p>When the university felt like a battlefield and home didn't feel like home, I was drowning in the noise.</p>
-        <button class="btn" onclick="next(2)">Step Closer</button>
+        <h1>I noticed something...</h1>
+        <p>In a world where everyone tries so hard to be "strong," you’re the only one who realized that being kind is much harder. And you do it so naturally.</p>
+        <button class="next-btn" onclick="go(2)">What I see</button>
     </div>
 
     <div id="s2" class="scene">
-        <h1>"You don't have to be strong with me."</h1>
-        <p>600km apart, but when I cried, you didn't pull away. You held my hand through the screen and made the heavy world feel light.</p>
+        <h1>It’s in the small things.</h1>
+        <p>The way you laugh at my stupid jokes. The way you send me cat videos just because you know they'll make me smile. You don't realize that while you're just being "you," you're making my whole world light up.</p>
+        <button class="next-btn" onclick="go(3)">Keep going</button>
     </div>
 
     <div id="s3" class="scene">
-        <h1>The one who stayed.</h1>
-        <p>Through the backstabs and the trauma of the past, you were the distraction I needed. The gaming talks, the stupid jokes, the funny videos when I was low.</p>
+        <h1>600 kilometers is just a number.</h1>
+        <p>I don't need to hold your hand to feel you here. I feel it in the way you listen, the way you believe in me when I don't, and the way you made me face my fears just by standing beside me.</p>
+        <button class="next-btn" onclick="go(4)">To 2025</button>
     </div>
 
     <div id="s4" class="scene">
-        <h1>I see you in my dreams.</h1>
-        <p>Waking up without you is the hardest part. My heart feels empty because I just want to hold your hand and never let go.</p>
-    </div>
-
-    <div id="s5" class="scene">
-        <p style="letter-spacing: 12px; margin-bottom: 20px;">2025</p>
-        <h1>I am your home, as you are mine.</h1>
-        <p>Thank you for believing in me when my own parents didn't. For pushing me to face my fears. For seeing the real me and choosing to stay.</p>
-        <button id="main-finale-btn" class="btn" onclick="ignite()">Open 2025 With Me</button>
+        <p style="letter-spacing: 10px; opacity: 0.5; margin-bottom: 20px;">OUR NEW YEAR</p>
+        <h1 style="font-size: 2.8rem;">You are my favorite place to be.</h1>
+        <p>Sunflowers, birds, ice cream, and you. <br> Thank you for letting me be myself. In 2025, I promise to be the anchor for you that you've always been for me.</p>
+        <p style="margin-top: 30px; font-size: 0.9rem; font-style: italic;">Happy New Year. I'm right here.</p>
     </div>
 </div>
 
 <script>
-    // Starfield Background Logic
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-
-    function init() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        stars = [];
-        for(let i=0; i<200; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                z: Math.random() * canvas.width,
-                s: Math.random() * 2
-            });
-        }
+    // Animation for drifting icons
+    const icons = ['🌻', '🐱', '🐦', '🍦', '🍫', '✨'];
+    for(let i=0; i<20; i++) {
+        let div = document.createElement('div');
+        div.className = 'floaty';
+        div.textContent = icons[Math.floor(Math.random()*icons.length)];
+        div.style.left = Math.random() * 100 + 'vw';
+        div.style.top = Math.random() * 100 + 'vh';
+        document.body.appendChild(div);
+        
+        animateFloaty(div);
     }
 
-    function draw() {
-        ctx.fillStyle = '#020205';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fbe07c';
-        stars.forEach(star => {
-            let x = (star.x - canvas.width/2) * (canvas.width/star.z) + canvas.width/2;
-            let y = (star.y - canvas.height/2) * (canvas.width/star.z) + canvas.height/2;
-            let size = (1 - star.z/canvas.width) * 3;
-            ctx.beginPath();
-            ctx.arc(x, y, size > 0 ? size : 0, 0, Math.PI*2);
-            ctx.fill();
-            star.z -= 2;
-            if(star.z <= 0) star.z = canvas.width;
+    function animateFloaty(el) {
+        let x = (Math.random() - 0.5) * 100;
+        let y = (Math.random() - 0.5) * 100;
+        el.animate([
+            { transform: 'translate(0, 0)' },
+            { transform: `translate(${x}px, ${y}px)` }
+        ], {
+            duration: 4000 + Math.random() * 4000,
+            iterations: Infinity,
+            direction: 'alternate',
+            easing: 'ease-in-out'
         });
-        requestAnimationFrame(draw);
     }
 
-    window.addEventListener('resize', init);
-    init();
-    draw();
-
-    // Scene Transition Logic
-    function next(num) {
-        document.getElementById('s1').classList.remove('active');
-        
-        const sequence = [
-            {id: 's2', time: 6000},
-            {id: 's3', time: 6000},
-            {id: 's4', time: 6000},
-            {id: 's5', time: 0}
-        ];
-
-        let current = 0;
-        function play() {
-            if(current > 0) document.getElementById(sequence[current-1].id).classList.remove('active');
-            
-            const nextScene = document.getElementById(sequence[current].id);
-            nextScene.classList.add('active');
-            
-            // Add floating emojis (Cats, Birds, Sunflowers)
-            spawnIcons();
-
-            if(sequence[current].time > 0) {
-                setTimeout(() => {
-                    current++;
-                    play();
-                }, sequence[current].time);
-            }
-        }
-        play();
-    }
-
-    function spawnIcons() {
-        const icons = ['🐱', '🐦', '🌻', '🍦', '🍫'];
-        for(let i=0; i<3; i++) {
-            const el = document.createElement('div');
-            el.className = 'emoji-float';
-            el.textContent = icons[Math.floor(Math.random() * icons.length)];
-            el.style.left = Math.random() * 90 + 'vw';
-            el.style.top = Math.random() * 90 + 'vh';
-            document.body.appendChild(el);
-            
-            el.animate([
-                { transform: 'translateY(0) scale(0)', opacity: 0 },
-                { transform: 'translateY(-100px) scale(1)', opacity: 0.4 },
-                { transform: 'translateY(-200px) scale(0)', opacity: 0 }
-            ], { duration: 4000, easing: 'ease-out' }).onfinish = () => el.remove();
-        }
-    }
-
-    function ignite() {
-        // Fireworks logic
-        for(let i=0; i<150; i++) {
-            createSpark();
-        }
-        document.getElementById('main-finale-btn').textContent = "I Love You. Always.";
-        
-        // Final Background shift to Chocolate/Yellow warm glow
-        document.querySelector('.overlay').style.background = 'radial-gradient(circle, rgba(251, 224, 124, 0.2) 0%, #1a0f00 100%)';
-    }
-
-    function createSpark() {
-        const s = document.createElement('div');
-        s.style.position = 'fixed';
-        s.style.width = '4px';
-        s.style.height = '4px';
-        s.style.backgroundColor = '#fbe07c';
-        s.style.borderRadius = '50%';
-        s.style.zIndex = '100';
-        document.body.appendChild(s);
-        
-        const x = window.innerWidth / 2;
-        const y = window.innerHeight / 2;
-        const destX = x + (Math.random() - 0.5) * 1000;
-        const destY = y + (Math.random() - 0.5) * 1000;
-        
-        s.animate([
-            { transform: `translate(${x}px, ${y}px)`, opacity: 1 },
-            { transform: `translate(${destX}px, ${destY}px)`, opacity: 0 }
-        ], { duration: 2000 + Math.random()*2000, easing: 'cubic-bezier(0, .9, .57, 1)' }).onfinish = () => s.remove();
+    function go(n) {
+        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+        document.getElementById('s' + n).classList.add('active');
     }
 </script>
 </body>
