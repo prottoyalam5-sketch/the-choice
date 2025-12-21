@@ -26,16 +26,15 @@
     position: relative;
   }
   
+  /* Initial Fading */
   #intro-wrap, #choices, #memory {
     transition: opacity 1.5s ease;
   }
-
   h1, h2, p, .choice-container {
     opacity: 0;
     transform: translateY(20px);
     transition: all 1.5s ease;
   }
-  
   .visible { opacity: 1 !important; transform: translateY(0) !important; }
 
   .yellow-glow {
@@ -43,6 +42,7 @@
     text-shadow: 0 0 20px #fbe07c, 0 0 40px rgba(251, 224, 124, 0.4);
   }
 
+  /* Emojis */
   .sunflower, .cat, .bird {
     position: absolute;
     font-size: 50px;
@@ -64,9 +64,7 @@
     font-weight: 600;
     border-radius: 12px;
     cursor: pointer;
-    transition: 0.3s;
   }
-  .choice-btn:hover { transform: scale(1.05); }
 
   .memory-echo {
     font-style: italic;
@@ -76,23 +74,23 @@
     opacity: 0;
   }
 
-  /* FIXED FINAL STYLING */
+  /* THE FINAL FIX STYLING */
   #final-reveal {
     position: absolute;
+    display: none; /* Changed via JS */
     opacity: 0;
-    visibility: hidden;
-    transition: all 4s ease;
-    transform: scale(0.8);
-    z-index: 999;
+    transition: all 3s ease;
+    z-index: 9999;
   }
 
-  #final-reveal.active-final {
+  /* This class forces the reveal */
+  .show-now {
+    display: block !important;
     opacity: 1 !important;
-    visibility: visible !important;
-    transform: scale(1) !important;
+    transform: scale(1.1);
   }
 
-  .year-text { font-size: 0.9rem; letter-spacing: 10px; opacity: 0.4; margin-bottom: 30px; }
+  .year-text { font-size: 0.9rem; letter-spacing: 15px; opacity: 0.4; margin-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -132,10 +130,10 @@
   const bird = document.querySelector('.bird');
 
   // Entrance
-  setTimeout(()=> document.getElementById('line1').classList.add('visible'), 800);
-  setTimeout(()=> document.getElementById('line2').classList.add('visible'), 2800);
-  setTimeout(()=> document.getElementById('line3').classList.add('visible'), 4800);
-  setTimeout(() => choices.classList.add('visible'), 6800);
+  setTimeout(()=> document.getElementById('line1').classList.add('visible'), 500);
+  setTimeout(()=> document.getElementById('line2').classList.add('visible'), 2500);
+  setTimeout(()=> document.getElementById('line3').classList.add('visible'), 4500);
+  setTimeout(() => choices.classList.add('visible'), 6500);
 
   // Floating
   let floatInterval = setInterval(() => {
@@ -147,7 +145,6 @@
     btn.addEventListener('click', () => {
       intro.style.opacity = '0';
       choices.style.opacity = '0';
-      choices.style.pointerEvents = 'none';
 
       setTimeout(() => {
         intro.style.display = 'none';
@@ -167,28 +164,28 @@
               memory.textContent = sequence[i];
               memory.style.opacity = '1';
               i++;
-              setTimeout(showLines, 4500); 
-            }, 1000);
+              setTimeout(showLines, 4000); 
+            }, 800);
           } else {
-            // THE FINAL REVEAL TRIGGER
+            // THE TRIGGER
             memory.style.opacity = '0';
             clearInterval(floatInterval);
             
             // Emojis fly away
             [sunflower, cat, bird].forEach(el => {
               el.style.opacity = '0';
-              el.style.transform = 'scale(3) translateY(-200px) rotate(45deg)';
+              el.style.transform = 'translateY(-500px) rotate(90deg)';
             });
 
+            // FINAL STEP: Force the text to show
             setTimeout(() => {
                 memory.style.display = 'none';
-                // Trigger the new active class
-                final.classList.add('active-final');
-            }, 2000);
+                final.classList.add('show-now');
+            }, 1500);
           }
         }
         showLines();
-      }, 1500);
+      }, 1000);
     });
   });
 </script>
