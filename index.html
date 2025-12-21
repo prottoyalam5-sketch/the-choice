@@ -88,12 +88,13 @@
     z-index: 20;
   }
 
-  /* NEW: Final Anchor Style */
+  /* The Ending Style */
   #final-reveal {
     opacity: 0;
-    transition: opacity 3s ease;
+    transition: all 3s ease;
     z-index: 30;
     position: absolute;
+    display: none; /* Hidden until the end */
   }
   .year-text { font-size: 0.9rem; letter-spacing: 5px; opacity: 0.5; margin-bottom: 20px; }
 </style>
@@ -136,11 +137,13 @@
   const cat = document.querySelector('.cat');
   const bird = document.querySelector('.bird');
 
+  // Entrance
   setTimeout(()=> line1.classList.add('visible'), 800);
   setTimeout(()=> line2.classList.add('visible'), 2800);
   setTimeout(()=> line3.classList.add('visible'), 4800);
   setTimeout(() => choices.classList.add('visible'), 6800);
 
+  // Floating
   setInterval(() => {
     cat.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
     bird.style.transform = `translate(${Math.random()*40-20}px, ${Math.random()*40-20}px)`;
@@ -173,12 +176,16 @@
               setTimeout(showLines, 4500); 
             }, 1000);
           } else {
-            // THE FINAL FIX: Move to the ending
+            // UNSTUCK LOGIC: Transitions to the Anchor message
             setTimeout(() => {
                 memory.style.opacity = '0';
                 setTimeout(() => {
                     memory.style.display = 'none';
-                    final.style.opacity = '1'; // Reveal the "Anchor" message
+                    final.style.display = 'block'; // Ensure it's in the DOM
+                    setTimeout(() => {
+                        final.style.opacity = '1'; // Fade it in
+                        final.style.transform = 'scale(1.1)'; // Slight grand zoom
+                    }, 100);
                 }, 2000);
             }, 3000);
           }
